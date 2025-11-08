@@ -24,4 +24,9 @@ RUN npm prune --production
 EXPOSE 4000
 
 # Script di avvio: crea schema, seed e avvia l'app
-CMD sh -c "npx prisma db push --accept-data-loss && npx tsx prisma/seed.ts && node dist/main.js"
+CMD sh -c "echo '🔨 Creating database schema...' && \
+    npx prisma db push --skip-generate --accept-data-loss && \
+    echo '🌱 Seeding database...' && \
+    npx tsx prisma/seed.ts && \
+    echo '🚀 Starting server...' && \
+    node dist/main.js"
