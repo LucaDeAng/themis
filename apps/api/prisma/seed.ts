@@ -5,6 +5,20 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
+  // Crea utente di default
+  const user = await prisma.user.upsert({
+    where: { id: '1' },
+    update: {},
+    create: {
+      id: '1',
+      email: 'admin@themis.local',
+      name: 'Admin User',
+      role: 'ADMIN',
+    },
+  });
+
+  console.log('✅ Created user:', user.email);
+
   // Crea workspace di default
   const workspace = await prisma.workspace.upsert({
     where: { id: '1' },
@@ -27,7 +41,7 @@ async function main() {
       title: 'Digital Transformation 2025',
       description: 'Strategic digital transformation initiatives',
       workspaceId: workspace.id,
-      ownerId: '1',
+      ownerId: user.id,
       status: 'ACTIVE',
       intent: {},
     },
