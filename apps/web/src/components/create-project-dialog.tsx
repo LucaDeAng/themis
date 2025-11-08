@@ -48,7 +48,7 @@ export function CreateProjectDialog({
       // Add createdBy field (temporary hardcoded until auth is implemented)
       const projectData = {
         ...data,
-        createdBy: '1', // Default user ID until authentication is implemented
+        createdBy: '00000000-0000-0000-0000-000000000001', // Default admin user UUID
       }
       await createProject.mutateAsync(projectData)
       reset()
