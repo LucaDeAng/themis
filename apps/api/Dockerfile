@@ -23,5 +23,5 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Script di avvio: esegue migrazioni, seed e avvia l'app
-CMD sh -c "npx prisma migrate deploy && npx tsx prisma/seed.ts && node dist/main.js"
+# Script di avvio: crea schema, seed e avvia l'app
+CMD sh -c "npx prisma db push --accept-data-loss && npx tsx prisma/seed.ts && node dist/main.js"
