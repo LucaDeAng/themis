@@ -23,9 +23,9 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Script di avvio: crea schema, seed e avvia l'app
-CMD sh -c "echo '🔨 Creating database schema...' && \
-    npx prisma db push --skip-generate --accept-data-loss && \
+# Script di avvio: esegue migrazioni, seed e avvia l'app
+CMD sh -c "echo '🔨 Running database migrations...' && \
+    npx prisma migrate deploy && \
     echo '🌱 Seeding database...' && \
     npx tsx prisma/seed.ts && \
     echo '🚀 Starting server...' && \

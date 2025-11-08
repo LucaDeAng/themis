@@ -25,11 +25,11 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  workspaces      WorkspaceMember[]
-  scores          Score[]
-  activityLogs    ActivityLog[]
-  briefsCreated   Brief[]           @relation("BriefCreator")
-  projectsOwned   Project[]         @relation("ProjectOwner")
+  workspaces    WorkspaceMember[]
+  scores        Score[]
+  activityLogs  ActivityLog[]
+  briefsCreated Brief[]           @relation("BriefCreator")
+  projectsOwned Project[]         @relation("ProjectOwner")
 
   @@map("users")
 }
@@ -83,13 +83,13 @@ model Project {
   ownerId     String        @map("owner_id") @db.Uuid
   title       String
   description String?
-  intent      Json?         // Captured intent: { goal, launch, objectives }
+  intent      Json? // Captured intent: { goal, launch, objectives }
   status      ProjectStatus @default(DRAFT)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
 
-  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  owner        User           @relation("ProjectOwner", fields: [ownerId], references: [id])
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  owner        User          @relation("ProjectOwner", fields: [ownerId], references: [id])
   criteria     Criterion[]
   requirements Requirement[]
   initiatives  Initiative[]
@@ -107,17 +107,17 @@ enum ProjectStatus {
 }
 
 model Criterion {
-  id             String         @id @default(uuid()) @db.Uuid
-  projectId      String         @map("project_id") @db.Uuid
-  name           String
-  description    String?
-  weight         Float          @default(1.0) // 0.0 to 1.0, sum should = 1.0
-  type           CriterionType  @default(SOFT)
-  minThreshold   Float?         @map("min_threshold") // For soft criteria
-  category       String?        // e.g., "impact", "feasibility", "strategic"
-  displayOrder   Int            @default(0) @map("display_order")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime       @updatedAt @map("updated_at")
+  id           String        @id @default(uuid()) @db.Uuid
+  projectId    String        @map("project_id") @db.Uuid
+  name         String
+  description  String?
+  weight       Float         @default(1.0) // 0.0 to 1.0, sum should = 1.0
+  type         CriterionType @default(SOFT)
+  minThreshold Float?        @map("min_threshold") // For soft criteria
+  category     String? // e.g., "impact", "feasibility", "strategic"
+  displayOrder Int           @default(0) @map("display_order")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   scores  Score[]
@@ -131,18 +131,18 @@ enum CriterionType {
 }
 
 model Requirement {
-  id          String   @id @default(uuid()) @db.Uuid
-  projectId   String   @map("project_id") @db.Uuid
-  name        String
-  description String?
-  expression  String   // JSON logic or simple boolean expression
-  isHardGate  Boolean  @default(true) @map("is_hard_gate")
-  displayOrder Int     @default(0) @map("display_order")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(uuid()) @db.Uuid
+  projectId    String   @map("project_id") @db.Uuid
+  name         String
+  description  String?
+  expression   String // JSON logic or simple boolean expression
+  isHardGate   Boolean  @default(true) @map("is_hard_gate")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  project      Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  gateResults  RequirementGateResult[]
+  project     Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  gateResults RequirementGateResult[]
 
   @@map("requirements")
 }
@@ -152,23 +152,23 @@ model Requirement {
 // ============================================================================
 
 model Initiative {
-  id          String           @id @default(uuid()) @db.Uuid
-  projectId   String           @map("project_id") @db.Uuid
+  id          String                       @id @default(uuid()) @db.Uuid
+  projectId   String                       @map("project_id") @db.Uuid
   title       String
   description String?
-  source      InitiativeSource @default(MANUAL)
-  tags        String[]         @default([])
-  metadata    Json?            @default("{}")
+  source      InitiativeSource             @default(MANUAL)
+  tags        String[]                     @default([])
+  metadata    Json?                        @default("{}")
   embedding   Unsupported("vector(1536)")? // pgvector for dedup
-  createdAt   DateTime         @default(now()) @map("created_at")
-  updatedAt   DateTime         @updatedAt @map("updated_at")
+  createdAt   DateTime                     @default(now()) @map("created_at")
+  updatedAt   DateTime                     @updatedAt @map("updated_at")
 
-  project          Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  scores           Score[]
-  aggregateScores  AggregateScore?
-  gateResults      RequirementGateResult[]
-  brief            Brief?
-  rankedItems      RankedItem[]
+  project         Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  scores          Score[]
+  aggregateScores AggregateScore?
+  gateResults     RequirementGateResult[]
+  brief           Brief?
+  rankedItems     RankedItem[]
 
   @@map("initiatives")
 }
@@ -185,8 +185,8 @@ model Score {
   initiativeId String   @map("initiative_id") @db.Uuid
   criterionId  String   @map("criterion_id") @db.Uuid
   reviewerId   String   @map("reviewer_id") @db.Uuid
-  value        Float    // 1.0 to 5.0
-  confidence   Float?   // 0.0 to 1.0 (optional)
+  value        Float // 1.0 to 5.0
+  confidence   Float? // 0.0 to 1.0 (optional)
   comment      String?
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -200,14 +200,14 @@ model Score {
 }
 
 model AggregateScore {
-  id               String   @id @default(uuid()) @db.Uuid
-  initiativeId     String   @unique @map("initiative_id") @db.Uuid
-  overallScore     Float    @map("overall_score") // Weighted sum
-  byCriterion      Json     @map("by_criterion") // { criterionId: aggregatedValue }
-  riskAdjusted     Float?   @map("risk_adjusted")
-  aggregationMethod String  @default("median") @map("aggregation_method")
-  calculatedAt     DateTime @default(now()) @map("calculated_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  id                String   @id @default(uuid()) @db.Uuid
+  initiativeId      String   @unique @map("initiative_id") @db.Uuid
+  overallScore      Float    @map("overall_score") // Weighted sum
+  byCriterion       Json     @map("by_criterion") // { criterionId: aggregatedValue }
+  riskAdjusted      Float?   @map("risk_adjusted")
+  aggregationMethod String   @default("median") @map("aggregation_method")
+  calculatedAt      DateTime @default(now()) @map("calculated_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
   initiative Initiative @relation(fields: [initiativeId], references: [id], onDelete: Cascade)
 
@@ -234,13 +234,13 @@ model RequirementGateResult {
 // ============================================================================
 
 model RankList {
-  id          String   @id @default(uuid()) @db.Uuid
-  projectId   String   @map("project_id") @db.Uuid
-  parameters  Json     // Weights, aggregation method, risk-adjusted, etc.
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(uuid()) @db.Uuid
+  projectId  String   @map("project_id") @db.Uuid
+  parameters Json // Weights, aggregation method, risk-adjusted, etc.
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  rankedItems  RankedItem[]
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  rankedItems RankedItem[]
 
   @@map("rank_lists")
 }
@@ -251,7 +251,7 @@ model RankedItem {
   initiativeId String @map("initiative_id") @db.Uuid
   rank         Int
   score        Float
-  explanation  Json   // Per-criterion contributions
+  explanation  Json // Per-criterion contributions
 
   rankList   RankList   @relation(fields: [rankListId], references: [id], onDelete: Cascade)
   initiative Initiative @relation(fields: [initiativeId], references: [id], onDelete: Cascade)
@@ -265,18 +265,18 @@ model RankedItem {
 // ============================================================================
 
 model Brief {
-  id              String   @id @default(uuid()) @db.Uuid
-  initiativeId    String   @unique @map("initiative_id") @db.Uuid
-  createdBy       String   @map("created_by") @db.Uuid
-  executiveSummary String? @map("executive_summary")
-  rationale       String?
-  risks           String?
-  metrics         String?
-  imagePrompt     String?  @map("image_prompt")
-  imageUrl        String?  @map("image_url")
-  sections        Json?    @default("{}")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id               String   @id @default(uuid()) @db.Uuid
+  initiativeId     String   @unique @map("initiative_id") @db.Uuid
+  createdBy        String   @map("created_by") @db.Uuid
+  executiveSummary String?  @map("executive_summary")
+  rationale        String?
+  risks            String?
+  metrics          String?
+  imagePrompt      String?  @map("image_prompt")
+  imageUrl         String?  @map("image_url")
+  sections         Json?    @default("{}")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
 
   initiative Initiative @relation(fields: [initiativeId], references: [id], onDelete: Cascade)
   creator    User       @relation("BriefCreator", fields: [createdBy], references: [id])
@@ -292,7 +292,7 @@ model ActivityLog {
   id        String   @id @default(uuid()) @db.Uuid
   projectId String?  @map("project_id") @db.Uuid
   actorId   String   @map("actor_id") @db.Uuid
-  action    String   // e.g., "CRITERION_CREATED", "SCORE_UPDATED", "BRIEF_GENERATED"
+  action    String // e.g., "CRITERION_CREATED", "SCORE_UPDATED", "BRIEF_GENERATED"
   payload   Json     @default("{}")
   timestamp DateTime @default(now())
 
