@@ -1,0 +1,11 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd ../.. && pnpm install && cd apps/api && pnpm run build"
+
+[deploy]
+startCommand = "cd apps/api && node dist/main.js"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[nixpacks]
+packages = ["nodejs_24", "pnpm"]
