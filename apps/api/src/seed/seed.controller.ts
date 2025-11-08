@@ -11,6 +11,23 @@ export class SeedController {
   @ApiOperation({ summary: 'Seed database with initial data (dev only)' })
   async seed() {
     try {
+      // First, try to run migrations
+      const { execSync } = require('child_process');
+      try {
+        console.log('Running migrations...');
+        execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+        console.log('Migrations completed');
+      } catch (migError) {
+        console.log('Migration warning:', migError.message);
+        // Try db push as fallback
+        try {
+          console.log('Trying db push...');
+          execSync('npx prisma db push --skip-generate --accept-data-loss', { stdio: 'inherit' });
+        } catch (pushError) {
+          console.log('DB push failed:', pushError.message);
+        }
+      }
+
       // Create default user
       const user = await this.prisma.user.upsert({
         where: { id: '1' },
@@ -62,6 +79,7 @@ export class SeedController {
         success: false,
         message: 'Seeding failed',
         error: error.message,
+        stack: error.stack,
       };
     }
   }
