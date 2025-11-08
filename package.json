@@ -1,0 +1,42 @@
+{
+  "name": "themis",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GenAI-assisted initiative prioritization engine",
+  "author": "Personal Project",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter \"./apps/**\" dev",
+    "build": "pnpm -r --filter \"./packages/**\" build && pnpm -r --filter \"./apps/**\" build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "pnpm -r typecheck",
+    "prisma:generate": "prisma generate --schema=./infra/prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema=./infra/prisma/schema.prisma",
+    "prisma:studio": "prisma studio --schema=./infra/prisma/schema.prisma",
+    "seed": "tsx infra/scripts/seed.ts",
+    "db:up": "docker compose -f infra/docker-compose.yml up -d db",
+    "db:down": "docker compose -f infra/docker-compose.yml down",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@prisma/client": "^6.19.0",
+    "@types/node": "^20.10.4",
+    "husky": "^8.0.3",
+    "prettier": "^3.1.0",
+    "prisma": "^6.19.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
