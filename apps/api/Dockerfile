@@ -22,5 +22,5 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Avvia l'applicazione
-CMD ["node", "dist/main.js"]
+# Script di avvio: esegue migrazioni e avvia l'app
+CMD sh -c "npx prisma migrate deploy && node dist/main.js"
