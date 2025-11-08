@@ -6,8 +6,9 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Installa dipendenze
+# Installa dipendenze (incluse dev per il build)
 RUN npm install --production=false && \
+    npm install -g tsx && \
     npx prisma generate
 
 # Copia il codice sorgente
