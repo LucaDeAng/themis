@@ -7,11 +7,8 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Installa dipendenze
-RUN npm ci --only=production && \
-    npm install -g @nestjs/cli prisma
-
-# Genera Prisma Client
-RUN npx prisma generate
+RUN npm install --production=false && \
+    npx prisma generate
 
 # Copia il codice sorgente
 COPY . .
