@@ -14,15 +14,15 @@ export class SeedController {
       // First, DROP ALL TABLES to reset UUID types
       await this.prisma.$executeRawUnsafe('DROP SCHEMA public CASCADE');
       await this.prisma.$executeRawUnsafe('CREATE SCHEMA public');
+      await this.prisma.$disconnect();
       
       // Now run db push to recreate tables with new schema
       const { execSync } = require('child_process');
-      try {
-        console.log('Creating new schema...');
-        execSync('npx prisma db push --skip-generate --accept-data-loss --force-reset', { stdio: 'inherit' });
-      } catch (pushError) {
-        console.log('DB push error:', pushError.message);
-      }
+      console.log('Creating new schema...');
+      execSync('npx prisma db push --skip-generate --accept-data-loss', { stdio: 'inherit' });
+      
+      // Reconnect
+      await this.prisma.$connect();
 
       // Create default user
       const user = await this.prisma.user.upsert({
