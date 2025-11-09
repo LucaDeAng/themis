@@ -11,20 +11,21 @@ export class SeedController {
   @ApiOperation({ summary: 'Seed database with initial data (dev only)' })
   async seed() {
     try {
-      // Drop and recreate schema with TEXT IDs instead of UUID
-      const schema = `
-        DROP TABLE IF EXISTS "activity_logs" CASCADE;
-        DROP TABLE IF EXISTS "scores" CASCADE;
-        DROP TABLE IF EXISTS "rank_lists" CASCADE;
-        DROP TABLE IF EXISTS "initiatives" CASCADE;
-        DROP TABLE IF EXISTS "requirements" CASCADE;
-        DROP TABLE IF EXISTS "criteria" CASCADE;
-        DROP TABLE IF EXISTS "briefs" CASCADE;
-        DROP TABLE IF EXISTS "projects" CASCADE;
-        DROP TABLE IF EXISTS "workspace_members" CASCADE;
-        DROP TABLE IF EXISTS "workspaces" CASCADE;
-        DROP TABLE IF EXISTS "users" CASCADE;
+      // Drop existing tables
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "activity_logs" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "scores" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "rank_lists" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "initiatives" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "requirements" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "criteria" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "briefs" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "projects" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "workspace_members" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "workspaces" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "users" CASCADE');
 
+      // Create tables with TEXT IDs
+      await this.prisma.$executeRawUnsafe(`
         CREATE TABLE "users" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "email" TEXT NOT NULL UNIQUE,
@@ -33,8 +34,10 @@ export class SeedController {
           "role" TEXT NOT NULL DEFAULT 'USER',
           "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updated_at" TIMESTAMP(3) NOT NULL
-        );
+        )
+      `);
 
+      await this.prisma.$executeRawUnsafe(`
         CREATE TABLE "workspaces" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "name" TEXT NOT NULL,
@@ -42,8 +45,10 @@ export class SeedController {
           "settings" JSONB DEFAULT '{}',
           "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updated_at" TIMESTAMP(3) NOT NULL
-        );
+        )
+      `);
 
+      await this.prisma.$executeRawUnsafe(`
         CREATE TABLE "projects" (
           "id" TEXT NOT NULL PRIMARY KEY,
           "workspace_id" TEXT NOT NULL,
@@ -56,10 +61,9 @@ export class SeedController {
           "updated_at" TIMESTAMP(3) NOT NULL,
           FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE,
           FOREIGN KEY ("owner_id") REFERENCES "users"("id")
-        );
-      `;
+        )
+      `);
       
-      await this.prisma.$executeRawUnsafe(schema);
       console.log('✅ Schema recreated');
 
       // Create default user
