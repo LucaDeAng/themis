@@ -8,15 +8,13 @@ COPY prisma ./prisma/
 
 # Installa dipendenze (incluse dev per il build)
 RUN npm install --production=false && \
-    npm install -g tsx && \
-    npx prisma generate
+    npm install -g tsx
 
-# Copia il codice sorgente
+# Copia il codice sorgente (include schema.prisma aggiornato)
 COPY . .
 
-# Copia il file SQL per il seed nel dist
-RUN mkdir -p dist/seed
-COPY src/seed/schema.sql dist/seed/
+# Genera Prisma client con il nuovo schema
+RUN npx prisma generate
 
 # Build dell'applicazione
 RUN npm run build
@@ -27,9 +25,9 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Script di avvio: esegue migrazioni, seed e avvia l'app
-CMD sh -c "echo '🔨 Running database migrations...' && \
-    npx prisma migrate deploy && \
+# Script di avvio: db push (crea/aggiorna schema), seed e avvia
+CMD sh -c "echo '🔨 Pushing database schema...' && \
+    npx prisma db push --accept-data-loss --skip-generate && \
     echo '🌱 Seeding database...' && \
     npx tsx prisma/seed.ts && \
     echo '🚀 Starting server...' && \
