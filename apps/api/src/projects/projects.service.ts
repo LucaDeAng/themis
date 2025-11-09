@@ -15,23 +15,12 @@ export class ProjectsService {
         description: data.description,
         status: 'DRAFT',
       },
-      include: {
-        criteria: true,
-      },
     });
   }
 
   async findAll(workspaceId: string) {
     return this.prisma.project.findMany({
       where: { workspaceId },
-      include: {
-        criteria: true,
-        _count: {
-          select: {
-            initiatives: true,
-          },
-        },
-      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -39,19 +28,6 @@ export class ProjectsService {
   async findOne(id: string) {
     const project = await this.prisma.project.findUnique({
       where: { id },
-      include: {
-        criteria: true,
-        requirements: true,
-        initiatives: {
-          take: 10,
-          orderBy: { createdAt: 'desc' },
-        },
-        _count: {
-          select: {
-            initiatives: true,
-          },
-        },
-      },
     });
 
     if (!project) {
@@ -68,9 +44,6 @@ export class ProjectsService {
         data: {
           title: data.name,
           description: data.description,
-        },
-        include: {
-          criteria: true,
         },
       });
     } catch (error) {
