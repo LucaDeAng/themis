@@ -24,6 +24,12 @@ export class SeedController {
       await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "workspaces" CASCADE');
       await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS "users" CASCADE');
 
+      // Create ENUMs
+      await this.prisma.$executeRawUnsafe('DROP TYPE IF EXISTS "UserRole" CASCADE');
+      await this.prisma.$executeRawUnsafe('DROP TYPE IF EXISTS "ProjectStatus" CASCADE');
+      await this.prisma.$executeRawUnsafe(`CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN')`);
+      await this.prisma.$executeRawUnsafe(`CREATE TYPE "ProjectStatus" AS ENUM ('DRAFT', 'ACTIVE', 'COMPLETED', 'ARCHIVED')`);
+
       // Create tables with TEXT IDs
       await this.prisma.$executeRawUnsafe(`
         CREATE TABLE "users" (
@@ -31,7 +37,7 @@ export class SeedController {
           "email" TEXT NOT NULL UNIQUE,
           "name" TEXT,
           "avatar_url" TEXT,
-          "role" TEXT NOT NULL DEFAULT 'USER',
+          "role" "UserRole" NOT NULL DEFAULT 'USER',
           "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updated_at" TIMESTAMP(3) NOT NULL
         )
@@ -56,7 +62,7 @@ export class SeedController {
           "title" TEXT NOT NULL,
           "description" TEXT,
           "intent" JSONB,
-          "status" TEXT NOT NULL DEFAULT 'DRAFT',
+          "status" "ProjectStatus" NOT NULL DEFAULT 'DRAFT',
           "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updated_at" TIMESTAMP(3) NOT NULL,
           FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("id") ON DELETE CASCADE,
