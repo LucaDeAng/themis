@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  const userId = '00000000-0000-0000-0000-000000000001';
-  const workspaceId = '00000000-0000-0000-0000-000000000002';
-  const projectId = '00000000-0000-0000-0000-000000000003';
+  const userId = '1';
+  const workspaceId = '1';
+  const projectId = '1';
 
   // Crea utente di default
   const user = await prisma.user.upsert({

@@ -17,7 +17,7 @@ datasource db {
 // ============================================================================
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(cuid())
   email     String   @unique
   name      String?
   avatarUrl String?  @map("avatar_url")
@@ -40,7 +40,7 @@ enum UserRole {
 }
 
 model Workspace {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(cuid())
   name      String
   slug      String   @unique
   settings  Json?    @default("{}")
@@ -54,9 +54,9 @@ model Workspace {
 }
 
 model WorkspaceMember {
-  id          String        @id @default(uuid()) @db.Uuid
-  workspaceId String        @map("workspace_id") @db.Uuid
-  userId      String        @map("user_id") @db.Uuid
+  id          String        @id @default(cuid())
+  workspaceId String        @map("workspace_id")
+  userId      String        @map("user_id")
   role        WorkspaceRole @default(VIEWER)
   joinedAt    DateTime      @default(now()) @map("joined_at")
 
@@ -78,12 +78,12 @@ enum WorkspaceRole {
 // ============================================================================
 
 model Project {
-  id          String        @id @default(uuid()) @db.Uuid
-  workspaceId String        @map("workspace_id") @db.Uuid
-  ownerId     String        @map("owner_id") @db.Uuid
+  id          String        @id @default(cuid())
+  workspaceId String        @map("workspace_id")
+  ownerId     String        @map("owner_id")
   title       String
   description String?
-  intent      Json? // Captured intent: { goal, launch, objectives }
+  intent      Json?         // Captured intent: { goal, launch, objectives }
   status      ProjectStatus @default(DRAFT)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
@@ -107,8 +107,8 @@ enum ProjectStatus {
 }
 
 model Criterion {
-  id           String        @id @default(uuid()) @db.Uuid
-  projectId    String        @map("project_id") @db.Uuid
+  id           String        @id @default(cuid())
+  projectId    String        @map("project_id")
   name         String
   description  String?
   weight       Float         @default(1.0) // 0.0 to 1.0, sum should = 1.0
@@ -131,8 +131,8 @@ enum CriterionType {
 }
 
 model Requirement {
-  id           String   @id @default(uuid()) @db.Uuid
-  projectId    String   @map("project_id") @db.Uuid
+  id           String   @id @default(cuid())
+  projectId    String   @map("project_id")
   name         String
   description  String?
   expression   String // JSON logic or simple boolean expression
@@ -152,8 +152,8 @@ model Requirement {
 // ============================================================================
 
 model Initiative {
-  id          String                       @id @default(uuid()) @db.Uuid
-  projectId   String                       @map("project_id") @db.Uuid
+  id          String                       @id @default(cuid())
+  projectId   String                       @map("project_id")
   title       String
   description String?
   source      InitiativeSource             @default(MANUAL)
@@ -181,10 +181,10 @@ enum InitiativeSource {
 }
 
 model Score {
-  id           String   @id @default(uuid()) @db.Uuid
-  initiativeId String   @map("initiative_id") @db.Uuid
-  criterionId  String   @map("criterion_id") @db.Uuid
-  reviewerId   String   @map("reviewer_id") @db.Uuid
+  id           String   @id @default(cuid())
+  initiativeId String   @map("initiative_id")
+  criterionId  String   @map("criterion_id")
+  reviewerId   String   @map("reviewer_id")
   value        Float // 1.0 to 5.0
   confidence   Float? // 0.0 to 1.0 (optional)
   comment      String?
@@ -200,8 +200,8 @@ model Score {
 }
 
 model AggregateScore {
-  id                String   @id @default(uuid()) @db.Uuid
-  initiativeId      String   @unique @map("initiative_id") @db.Uuid
+  id                String   @id @default(cuid())
+  initiativeId      String   @unique @map("initiative_id")
   overallScore      Float    @map("overall_score") // Weighted sum
   byCriterion       Json     @map("by_criterion") // { criterionId: aggregatedValue }
   riskAdjusted      Float?   @map("risk_adjusted")
@@ -215,9 +215,9 @@ model AggregateScore {
 }
 
 model RequirementGateResult {
-  id            String   @id @default(uuid()) @db.Uuid
-  initiativeId  String   @map("initiative_id") @db.Uuid
-  requirementId String   @map("requirement_id") @db.Uuid
+  id            String   @id @default(cuid())
+  initiativeId  String   @map("initiative_id")
+  requirementId String   @map("requirement_id")
   passed        Boolean
   reason        String?
   evaluatedAt   DateTime @default(now()) @map("evaluated_at")
@@ -234,8 +234,8 @@ model RequirementGateResult {
 // ============================================================================
 
 model RankList {
-  id         String   @id @default(uuid()) @db.Uuid
-  projectId  String   @map("project_id") @db.Uuid
+  id         String   @id @default(cuid())
+  projectId  String   @map("project_id")
   parameters Json // Weights, aggregation method, risk-adjusted, etc.
   createdAt  DateTime @default(now()) @map("created_at")
 
@@ -246,9 +246,9 @@ model RankList {
 }
 
 model RankedItem {
-  id           String @id @default(uuid()) @db.Uuid
-  rankListId   String @map("rank_list_id") @db.Uuid
-  initiativeId String @map("initiative_id") @db.Uuid
+  id           String @id @default(cuid())
+  rankListId   String @map("rank_list_id")
+  initiativeId String @map("initiative_id")
   rank         Int
   score        Float
   explanation  Json // Per-criterion contributions
@@ -265,9 +265,9 @@ model RankedItem {
 // ============================================================================
 
 model Brief {
-  id               String   @id @default(uuid()) @db.Uuid
-  initiativeId     String   @unique @map("initiative_id") @db.Uuid
-  createdBy        String   @map("created_by") @db.Uuid
+  id               String   @id @default(cuid())
+  initiativeId     String   @unique @map("initiative_id")
+  createdBy        String   @map("created_by")
   executiveSummary String?  @map("executive_summary")
   rationale        String?
   risks            String?
@@ -289,9 +289,9 @@ model Brief {
 // ============================================================================
 
 model ActivityLog {
-  id        String   @id @default(uuid()) @db.Uuid
-  projectId String?  @map("project_id") @db.Uuid
-  actorId   String   @map("actor_id") @db.Uuid
+  id        String   @id @default(cuid())
+  projectId String?  @map("project_id")
+  actorId   String   @map("actor_id")
   action    String // e.g., "CRITERION_CREATED", "SCORE_UPDATED", "BRIEF_GENERATED"
   payload   Json     @default("{}")
   timestamp DateTime @default(now())
@@ -302,3 +302,4 @@ model ActivityLog {
   @@index([projectId, timestamp])
   @@map("activity_logs")
 }
+

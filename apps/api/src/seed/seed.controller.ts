@@ -30,10 +30,10 @@ export class SeedController {
 
       // Create default user
       const user = await this.prisma.user.upsert({
-        where: { id: '00000000-0000-0000-0000-000000000001' },
+        where: { id: '1' },
         update: {},
         create: {
-          id: '00000000-0000-0000-0000-000000000001',
+          id: '1',
           email: 'admin@themis.local',
           name: 'Admin User',
           role: 'ADMIN',
@@ -42,10 +42,10 @@ export class SeedController {
 
       // Create default workspace
       const workspace = await this.prisma.workspace.upsert({
-        where: { id: '00000000-0000-0000-0000-000000000002' },
+        where: { id: '1' },
         update: {},
         create: {
-          id: '00000000-0000-0000-0000-000000000002',
+          id: '1',
           name: 'Default Workspace',
           slug: 'default',
         },
@@ -53,12 +53,12 @@ export class SeedController {
 
       // Create sample project
       const project = await this.prisma.project.upsert({
-        where: { id: '00000000-0000-0000-0000-000000000003' },
+        where: { id: '1' },
         update: {},
         create: {
-          id: '00000000-0000-0000-0000-000000000003',
-          workspaceId: '00000000-0000-0000-0000-000000000002',
-          ownerId: '00000000-0000-0000-0000-000000000001',
+          id: '1',
+          workspaceId: '1',
+          ownerId: '1',
           title: 'Digital Transformation 2025',
           description: 'Strategic digital transformation initiatives for 2025',
           status: 'DRAFT',
