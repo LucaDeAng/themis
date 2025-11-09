@@ -14,6 +14,10 @@ RUN npm install --production=false && \
 # Copia il codice sorgente
 COPY . .
 
+# Copia il file SQL per il seed nel dist
+RUN mkdir -p dist/seed
+COPY src/seed/schema.sql dist/seed/
+
 # Build dell'applicazione
 RUN npm run build
 
