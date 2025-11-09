@@ -11,21 +11,17 @@ export class SeedController {
   @ApiOperation({ summary: 'Seed database with initial data (dev only)' })
   async seed() {
     try {
-      // First, try to run migrations
+      // First, DROP ALL TABLES to reset UUID types
+      await this.prisma.$executeRawUnsafe('DROP SCHEMA public CASCADE');
+      await this.prisma.$executeRawUnsafe('CREATE SCHEMA public');
+      
+      // Now run db push to recreate tables with new schema
       const { execSync } = require('child_process');
       try {
-        console.log('Running migrations...');
-        execSync('npx prisma migrate deploy', { stdio: 'inherit' });
-        console.log('Migrations completed');
-      } catch (migError) {
-        console.log('Migration warning:', migError.message);
-        // Try db push as fallback
-        try {
-          console.log('Trying db push...');
-          execSync('npx prisma db push --skip-generate --accept-data-loss', { stdio: 'inherit' });
-        } catch (pushError) {
-          console.log('DB push failed:', pushError.message);
-        }
+        console.log('Creating new schema...');
+        execSync('npx prisma db push --skip-generate --accept-data-loss --force-reset', { stdio: 'inherit' });
+      } catch (pushError) {
+        console.log('DB push error:', pushError.message);
       }
 
       // Create default user
