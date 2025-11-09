@@ -1,6 +1,8 @@
 import { Controller, Post } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PrismaService } from '../prisma/prisma.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @ApiTags('seed')
 @Controller('seed')
@@ -11,18 +13,12 @@ export class SeedController {
   @ApiOperation({ summary: 'Seed database with initial data (dev only)' })
   async seed() {
     try {
-      // First, DROP ALL TABLES to reset UUID types
-      await this.prisma.$executeRawUnsafe('DROP SCHEMA public CASCADE');
-      await this.prisma.$executeRawUnsafe('CREATE SCHEMA public');
-      await this.prisma.$disconnect();
+      // Read and execute schema SQL
+      const schemaPath = path.join(__dirname, 'schema.sql');
+      const schema = fs.readFileSync(schemaPath, 'utf8');
+      await this.prisma.$executeRawUnsafe(schema);
       
-      // Now run db push to recreate tables with new schema
-      const { execSync } = require('child_process');
-      console.log('Creating new schema...');
-      execSync('npx prisma db push --skip-generate --accept-data-loss', { stdio: 'inherit' });
-      
-      // Reconnect
-      await this.prisma.$connect();
+      console.log('✅ Schema created');
 
       // Create default user
       const user = await this.prisma.user.upsert({
