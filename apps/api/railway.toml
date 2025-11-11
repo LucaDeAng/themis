@@ -1,0 +1,5 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "sh -c 'DATABASE_URL=$SUPABASE_DATABASE_URL node dist/main.js'"
