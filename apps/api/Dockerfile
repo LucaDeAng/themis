@@ -24,5 +24,5 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Avvia direttamente il server (database già configurato)
-CMD ["node", "dist/main.js"]
+# Avvia il server forzando DATABASE_URL a usare Supabase
+CMD sh -c "export DATABASE_URL=\"${SUPABASE_DATABASE_URL}\" && node dist/main.js"
