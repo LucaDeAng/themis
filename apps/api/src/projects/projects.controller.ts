@@ -28,6 +28,7 @@ export class ProjectsController {
   @ApiResponse({ status: 201, description: 'Project created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input' })
   create(@Body() createProjectDto: CreateProjectDto) {
+    console.log('📥 Received createProjectDto:', JSON.stringify(createProjectDto, null, 2));
     return this.projectsService.create(createProjectDto);
   }
 
