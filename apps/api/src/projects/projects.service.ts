@@ -10,10 +10,11 @@ export class ProjectsService {
     return this.prisma.project.create({
       data: {
         workspaceId: data.workspaceId,
-        ownerId: data.createdBy,
-        title: data.name,
+        createdBy: data.createdBy,
+        name: data.name,
         description: data.description,
-        status: 'DRAFT',
+        businessContext: data.businessContext,
+        strategicGoals: data.strategicGoals,
       },
     });
   }

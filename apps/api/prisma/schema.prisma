@@ -25,11 +25,11 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  workspaces    WorkspaceMember[]
-  scores        Score[]
-  activityLogs  ActivityLog[]
-  briefsCreated Brief[]           @relation("BriefCreator")
-  projectsOwned Project[]         @relation("ProjectOwner")
+  workspaces       WorkspaceMember[]
+  scores           Score[]
+  activityLogs     ActivityLog[]
+  briefsCreated    Brief[]           @relation("BriefCreator")
+  projectsCreated  Project[]         @relation("ProjectCreator")
 
   @@map("users")
 }
@@ -54,11 +54,11 @@ model Workspace {
 }
 
 model WorkspaceMember {
-  id          String        @id @default(cuid())
-  workspaceId String        @map("workspace_id")
-  userId      String        @map("user_id")
-  role        WorkspaceRole @default(VIEWER)
-  joinedAt    DateTime      @default(now()) @map("joined_at")
+  id          String   @id @default(cuid())
+  workspaceId String   @map("workspace_id")
+  userId      String   @map("user_id")
+  role        String   @default("member")
+  joinedAt    DateTime @default(now()) @map("joined_at")
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -67,29 +67,23 @@ model WorkspaceMember {
   @@map("workspace_members")
 }
 
-enum WorkspaceRole {
-  OWNER
-  REVIEWER
-  VIEWER
-}
-
 // ============================================================================
 // PROJECT & CRITERIA
 // ============================================================================
 
 model Project {
-  id          String        @id @default(cuid())
-  workspaceId String        @map("workspace_id")
-  ownerId     String        @map("owner_id")
-  title       String
-  description String?
-  intent      Json?         // Captured intent: { goal, launch, objectives }
-  status      ProjectStatus @default(DRAFT)
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  id              String   @id @default(cuid())
+  workspaceId     String   @map("workspace_id")
+  name            String
+  description     String?
+  businessContext String?  @map("business_context")
+  strategicGoals  String[] @map("strategic_goals")
+  createdBy       String   @map("created_by")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  owner        User          @relation("ProjectOwner", fields: [ownerId], references: [id])
+  creator      User          @relation("ProjectCreator", fields: [createdBy], references: [id])
   criteria     Criterion[]
   requirements Requirement[]
   initiatives  Initiative[]
@@ -97,13 +91,6 @@ model Project {
   activityLogs ActivityLog[]
 
   @@map("projects")
-}
-
-enum ProjectStatus {
-  DRAFT
-  ACTIVE
-  COMPLETED
-  ARCHIVED
 }
 
 model Criterion {
