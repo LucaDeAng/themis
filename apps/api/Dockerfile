@@ -25,10 +25,5 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Script di avvio: db push (crea/aggiorna schema), seed e avvia
-CMD sh -c "echo '🔨 Pushing database schema...' && \
-    npx prisma db push --accept-data-loss --skip-generate && \
-    echo '🌱 Seeding database...' && \
-    npx tsx prisma/seed.ts && \
-    echo '🚀 Starting server...' && \
-    node dist/main.js"
+# Avvia direttamente il server (database già configurato)
+CMD ["node", "dist/main.js"]
