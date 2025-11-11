@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Copia i file di configurazione
 COPY package*.json ./
-COPY prisma ./prisma/
 
 # Installa dipendenze (incluse dev per il build)
 RUN npm install --production=false && \
@@ -13,7 +12,7 @@ RUN npm install --production=false && \
 # Copia il codice sorgente (include schema.prisma aggiornato)
 COPY . .
 
-# Genera Prisma client con il nuovo schema
+# Genera Prisma client DOPO aver copiato lo schema aggiornato
 RUN npx prisma generate
 
 # Build dell'applicazione
