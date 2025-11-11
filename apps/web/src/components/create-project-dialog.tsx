@@ -50,11 +50,13 @@ export function CreateProjectDialog({
         ...data,
         createdBy: '1', // Default user ID
       }
+      console.log('📤 Sending project data:', JSON.stringify(projectData, null, 2))
       await createProject.mutateAsync(projectData)
       reset()
       onOpenChange(false)
     } catch (error) {
       console.error('Failed to create project:', error)
+      console.error('Error details:', error)
     }
   }
 
