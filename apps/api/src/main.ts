@@ -2,8 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { INestApplication } from '@nestjs/common';
 
-async function bootstrap() {
+let cachedApp: INestApplication;
+
+async function createApp() {
+  if (cachedApp) {
+    return cachedApp;
+  }
+
   const app = await NestFactory.create(AppModule);
 
   // Enable CORS
@@ -47,6 +54,21 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  await app.init();
+  cachedApp = app;
+  return app;
+}
+
+// For Vercel serverless
+export default async (req, res) => {
+  const app = await createApp();
+  const server = app.getHttpAdapter().getInstance();
+  return server(req, res);
+};
+
+// For local development
+async function bootstrap() {
+  const app = await createApp();
   const port = process.env.PORT || process.env.API_PORT || 4000;
   await app.listen(port, '0.0.0.0');
 
@@ -55,4 +77,6 @@ async function bootstrap() {
   console.log(`\n✨ Gen AI Engine Ready!\n`);
 }
 
-bootstrap();
+if (require.main === module) {
+  bootstrap();
+}
