@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "devCommand": "npm run start:dev",
-  "installCommand": "npm install && npx prisma generate",
+  "buildCommand": "cd ../.. && pnpm install && cd apps/api && pnpm run build",
+  "devCommand": "pnpm run start:dev",
+  "installCommand": "cd ../.. && pnpm install && pnpm --filter @themis/api exec prisma generate",
   "outputDirectory": "dist",
   "rewrites": [
     {
