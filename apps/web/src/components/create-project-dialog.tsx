@@ -45,6 +45,9 @@ export function CreateProjectDialog({
 
   const onSubmit = async (data: any) => {
     try {
+      console.log('🔍 Form data received:', data)
+      console.log('🔍 Workspace ID:', workspaceId)
+      
       // Build complete project data with all required fields explicitly
       const projectData: CreateProjectDto = {
         workspaceId: workspaceId,
@@ -54,6 +57,7 @@ export function CreateProjectDialog({
       }
       console.log('📤 Sending project data:', JSON.stringify(projectData, null, 2))
       console.log('📤 CreatedBy field:', projectData.createdBy)
+      console.log('📤 Full object:', projectData)
       await createProject.mutateAsync(projectData)
       reset()
       onOpenChange(false)
