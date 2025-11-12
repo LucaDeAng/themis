@@ -43,12 +43,14 @@ export function CreateProjectDialog({
 
   const createProject = useCreateProject()
 
-  const onSubmit = async (data: CreateProjectDto) => {
+  const onSubmit = async (data: any) => {
     try {
-      // Add createdBy field (temporary hardcoded until auth is implemented)
-      const projectData = {
-        ...data,
-        createdBy: '1', // Default user ID
+      // Build complete project data with all required fields
+      const projectData: CreateProjectDto = {
+        workspaceId: workspaceId,
+        name: data.name,
+        description: data.description || '',
+        createdBy: '1', // Default user ID (temporary hardcoded until auth is implemented)
       }
       console.log('📤 Sending project data:', JSON.stringify(projectData, null, 2))
       await createProject.mutateAsync(projectData)
