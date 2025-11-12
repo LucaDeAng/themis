@@ -24,5 +24,5 @@ RUN npm prune --production
 # Espone la porta
 EXPOSE 4000
 
-# Rigenera Prisma client a runtime e avvia il server
-CMD sh -c "npx prisma generate && node dist/main.js"
+# Avvia il server
+CMD ["node", "dist/main.js"]
