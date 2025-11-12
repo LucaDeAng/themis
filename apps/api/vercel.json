@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && cd apps/api && pnpm run build",
-  "devCommand": "pnpm run start:dev",
-  "installCommand": "cd ../.. && pnpm install && pnpm --filter @themis/api exec prisma generate",
+  "buildCommand": "npm install --legacy-peer-deps && npx prisma generate && npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
   "outputDirectory": "dist",
   "rewrites": [
     {
