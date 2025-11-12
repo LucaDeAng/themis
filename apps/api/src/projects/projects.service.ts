@@ -43,7 +43,7 @@ export class ProjectsService {
       return await this.prisma.project.update({
         where: { id },
         data: {
-          title: data.name,
+          name: data.name,
           description: data.description,
         },
       });

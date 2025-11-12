@@ -102,10 +102,9 @@ export class SeedController {
         create: {
           id: '1',
           workspaceId: '1',
-          ownerId: '1',
-          title: 'Digital Transformation 2025',
+          createdBy: '1',
+          name: 'Digital Transformation 2025',
           description: 'Strategic digital transformation initiatives for 2025',
-          status: 'DRAFT',
         },
       });
 
