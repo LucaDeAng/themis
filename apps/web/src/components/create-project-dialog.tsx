@@ -38,27 +38,17 @@ export function CreateProjectDialog({
       workspaceId,
       name: '',
       description: '',
+      createdBy: '1', // Default user ID
     },
   })
 
   const createProject = useCreateProject()
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: CreateProjectDto) => {
     try {
       console.log('🔍 Form data received:', data)
-      console.log('🔍 Workspace ID:', workspaceId)
-      
-      // Build complete project data with all required fields explicitly
-      const projectData: CreateProjectDto = {
-        workspaceId: workspaceId,
-        name: data.name,
-        description: data.description || '',
-        createdBy: '1', // Default user ID (temporary hardcoded until auth is implemented)
-      }
-      console.log('📤 Sending project data:', JSON.stringify(projectData, null, 2))
-      console.log('📤 CreatedBy field:', projectData.createdBy)
-      console.log('📤 Full object:', projectData)
-      await createProject.mutateAsync(projectData)
+      console.log(' Sending to API:', data)
+      await createProject.mutateAsync(data)
       reset()
       onOpenChange(false)
     } catch (error) {
@@ -77,6 +67,9 @@ export function CreateProjectDialog({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Hidden field for createdBy */}
+          <input type="hidden" {...register('createdBy')} value="1" />
+          
           <div className="space-y-2">
             <Label htmlFor="name">Project Name *</Label>
             <Input
