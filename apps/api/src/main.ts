@@ -14,12 +14,32 @@ async function createApp() {
   const app = await NestFactory.create(AppModule);
 
   // Enable CORS
-  const allowedOrigins = process.env.CORS_ORIGIN 
+  const corsOrigins = process.env.CORS_ORIGIN 
     ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
     : ['http://localhost:3000'];
   
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      
+      // Check if origin matches any allowed pattern
+      const isAllowed = corsOrigins.some(pattern => {
+        if (pattern.includes('*')) {
+          // Convert wildcard pattern to regex
+          const regexPattern = pattern.replace(/\*/g, '.*');
+          const regex = new RegExp(`^${regexPattern}$`);
+          return regex.test(origin);
+        }
+        return pattern === origin;
+      });
+      
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 
