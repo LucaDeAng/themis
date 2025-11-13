@@ -27,18 +27,14 @@ async function createApp() {
       const isAllowed = corsOrigins.some(pattern => {
         if (pattern.includes('*')) {
           // Convert wildcard pattern to regex
-          const regexPattern = pattern.replace(/\*/g, '.*');
+          const regexPattern = pattern.replace(/\*/g, '.*').replace(/\./g, '\\.');
           const regex = new RegExp(`^${regexPattern}$`);
           return regex.test(origin);
         }
         return pattern === origin;
       });
       
-      if (isAllowed) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+      callback(null, isAllowed);
     },
     credentials: true,
   });
