@@ -19,6 +19,8 @@ COPY . .
 
 # Build the app
 WORKDIR /app/apps/web
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN pnpm build
 
 # Expose port and start
