@@ -79,7 +79,7 @@ export default function ProjectDetailPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-4xl font-bold text-gradient">{project.name}</h1>
+            <h1 className="text-4xl font-bold text-gradient">{project.title || project.name}</h1>
             {project.description && (
               <p className="text-muted-foreground mt-2">
                 {project.description}

@@ -142,7 +142,7 @@ export default function RankingPage() {
         <ProjectTabs />
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gradient">{project.name} - Ranking</h1>
+            <h1 className="text-3xl font-bold text-gradient">{project.title} - Ranking</h1>
             <p className="text-muted-foreground mt-2">Prioritized list based on weighted scores</p>
           </div>
 
@@ -171,7 +171,7 @@ export default function RankingPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gradient">{project.name} - Ranking</h1>
+          <h1 className="text-3xl font-bold text-gradient">{project.title} - Ranking</h1>
           <p className="text-muted-foreground mt-2">
             Initiatives ranked by weighted score and gate compliance
           </p>
@@ -179,7 +179,7 @@ export default function RankingPage() {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            onClick={() => exportRankingToCSV(rankedInitiatives, project.name)}
+            onClick={() => exportRankingToCSV(rankedInitiatives, project.title)}
           >
             <Download className="w-4 h-4 mr-2" />
             Export CSV

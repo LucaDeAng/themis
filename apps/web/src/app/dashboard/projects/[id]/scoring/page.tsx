@@ -136,7 +136,7 @@ export default function ScoringPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring Matrix</h1>
+          <h1 className="text-3xl font-bold text-gradient">{project.title} - Scoring Matrix</h1>
           <p className="text-muted-foreground mt-2">
             Rate each initiative on a scale of 1-5 for each criterion
           </p>
@@ -150,7 +150,7 @@ export default function ScoringPage() {
           )}
           <Button
             variant="outline"
-            onClick={() => exportScoringToCSV(initiatives, criteria, scores, project.name)}
+            onClick={() => exportScoringToCSV(initiatives, criteria, scores, project.title)}
           >
             <Download className="w-4 h-4 mr-2" />
             Export CSV
