@@ -22,6 +22,7 @@ export interface Project {
   id: string;
   workspaceId: string;
   ownerId: string;
+  name: string; // Backend uses 'name' field
   title: string;
   description: string | null;
   intent: Record<string, any> | null;

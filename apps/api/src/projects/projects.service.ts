@@ -70,8 +70,11 @@ export class ProjectsService {
         projectId,
         name: data.name,
         description: data.description,
-        weight: data.weight || 1.0,
-        type: 'SOFT',
+        category: data.category,
+        type: data.type || 'SOFT',
+        weight: data.weight || 0.1,
+        minThreshold: data.minThreshold,
+        displayOrder: data.displayOrder || 0,
       },
     });
   }
@@ -79,20 +82,28 @@ export class ProjectsService {
   async getCriteria(projectId: string) {
     return this.prisma.criterion.findMany({
       where: { projectId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { displayOrder: 'asc' },
     });
   }
 
   async updateCriterion(id: string, data: Partial<CreateCriterionDto>) {
     try {
-      return await this.prisma.criterion.update({
+      const criterion = await this.prisma.criterion.update({
         where: { id },
         data: {
           name: data.name,
           description: data.description,
+          category: data.category,
+          type: data.type,
           weight: data.weight,
+          minThreshold: data.minThreshold,
+          displayOrder: data.displayOrder,
+        },
+        include: {
+          project: true,
         },
       });
+      return criterion;
     } catch (error) {
       throw new NotFoundException(`Criterion with ID ${id} not found`);
     }

@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ['nodejs_20']
+
+[phases.install]
+cmds = ['corepack enable', 'corepack prepare pnpm@9.1.0 --activate', 'pnpm install --frozen-lockfile']
+
+[phases.build]
+cmds = ['cd apps/web && pnpm build']
+
+[start]
+cmd = 'cd apps/web && pnpm start'

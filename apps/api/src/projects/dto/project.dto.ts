@@ -66,9 +66,27 @@ export class CreateCriterionDto {
   @IsOptional()
   description?: string;
 
-  @ApiPropertyOptional({ description: 'Weight (default: 1.0)', default: 1.0 })
+  @ApiPropertyOptional({ description: 'Category (Strategic, Financial, Operational, Risk, Customer, Innovation)' })
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @ApiPropertyOptional({ description: 'Type: HARD gate or SOFT scoring', default: 'SOFT' })
+  @IsString()
+  @IsOptional()
+  type?: 'HARD' | 'SOFT';
+
+  @ApiPropertyOptional({ description: 'Weight (0.0 to 1.0, default: 0.1)', default: 0.1 })
   @IsOptional()
   weight?: number;
+
+  @ApiPropertyOptional({ description: 'Minimum threshold (2-5) for SOFT criteria' })
+  @IsOptional()
+  minThreshold?: number;
+
+  @ApiPropertyOptional({ description: 'Display order', default: 0 })
+  @IsOptional()
+  displayOrder?: number;
 
   @ApiPropertyOptional({ description: 'Scale minimum', default: 1 })
   @IsOptional()
