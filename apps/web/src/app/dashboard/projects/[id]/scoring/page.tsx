@@ -13,6 +13,7 @@ import { useInitiatives } from '@/hooks/use-initiatives'
 import { useScores, useUpdateScore } from '@/hooks/use-scores'
 import { ScoringCell } from '@/components/scoring-cell'
 import type { Criterion, Initiative, Score } from '@/types'
+import { ProjectTabs } from '@/components/project-tabs'
 
 export default function ScoringPage() {
   const params = useParams()
@@ -83,48 +84,56 @@ export default function ScoringPage() {
 
   if (softCriteria.length === 0) {
     return (
-      <div className="p-6 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring</h1>
-          <p className="text-muted-foreground mt-2">Score initiatives against criteria</p>
-        </div>
+      <div className="space-y-0">
+        <ProjectTabs />
+        <div className="p-6 space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring</h1>
+            <p className="text-muted-foreground mt-2">Score initiatives against criteria</p>
+          </div>
 
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            No SOFT criteria defined yet. Please add criteria in the{' '}
-            <a href={`/dashboard/projects/${projectId}/criteria`} className="underline">
-              Criteria Management
-            </a>{' '}
-            page first.
-          </AlertDescription>
-        </Alert>
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              No SOFT criteria defined yet. Please add criteria in the{' '}
+              <a href={`/dashboard/projects/${projectId}/criteria`} className="underline">
+                Criteria Management
+              </a>{' '}
+              page first.
+            </AlertDescription>
+          </Alert>
+        </div>
       </div>
     )
   }
 
   if (initiatives.length === 0) {
     return (
-      <div className="p-6 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring</h1>
-          <p className="text-muted-foreground mt-2">Score initiatives against criteria</p>
-        </div>
+      <div className="space-y-0">
+        <ProjectTabs />
+        <div className="p-6 space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring</h1>
+            <p className="text-muted-foreground mt-2">Score initiatives against criteria</p>
+          </div>
 
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            No initiatives to score. Please add initiatives first.
-          </AlertDescription>
-        </Alert>
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              No initiatives to score. Please add initiatives first.
+            </AlertDescription>
+          </Alert>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-0">
+      <ProjectTabs />
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring Matrix</h1>
           <p className="text-muted-foreground mt-2">
@@ -318,6 +327,7 @@ export default function ScoringPage() {
             <p className="text-xs text-muted-foreground mt-1">Minimum score requirements</p>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   )

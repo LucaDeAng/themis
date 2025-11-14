@@ -12,6 +12,7 @@ import { WeightDistributionChart } from '@/components/weight-distribution-chart'
 import { useCriteria } from '@/hooks/use-criteria'
 import { useProject } from '@/hooks/use-projects'
 import type { Criterion } from '@/types'
+import { ProjectTabs } from '@/components/project-tabs'
 
 export default function CriteriaPage() {
   const params = useParams()
@@ -34,9 +35,11 @@ export default function CriteriaPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-0">
+      <ProjectTabs />
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gradient">{project?.name}</h1>
           <p className="text-muted-foreground mt-2">
@@ -143,6 +146,7 @@ export default function CriteriaPage() {
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
       />
+      </div>
     </div>
   )
 }
