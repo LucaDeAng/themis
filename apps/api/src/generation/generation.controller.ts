@@ -1,7 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GenerationService } from './generation.service';
-import { GenerateInitiativesDto, GenerateBriefDto, EnrichInitiativeDto } from './dto/generation.dto';
+import { 
+  GenerateInitiativesDto, 
+  GenerateBriefDto, 
+  EnrichInitiativeDto,
+  FeasibilityCheckDto,
+  GenerateFullBriefDto
+} from './dto/generation.dto';
 
 @ApiTags('generation')
 @Controller('generation')
@@ -21,13 +27,24 @@ export class GenerationController {
 
   @Post('brief')
   @ApiOperation({ 
-    summary: 'Generate concept brief using AI',
-    description: 'Creates a comprehensive concept brief with executive summary, rationale, risks, and metrics'
+    summary: 'Generate full concept brief using AI',
+    description: 'Creates a comprehensive concept brief with 6 sections'
   })
   @ApiResponse({ status: 201, description: 'Brief generated successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input or generation failed' })
-  generateBrief(@Body() dto: GenerateBriefDto) {
-    return this.generationService.generateBrief(dto);
+  generateFullBrief(@Body() dto: GenerateFullBriefDto) {
+    return this.generationService.generateFullBrief(dto);
+  }
+
+  @Post('feasibility')
+  @ApiOperation({ 
+    summary: 'Check feasibility using AI',
+    description: 'Analyzes technical feasibility, resource availability, and time to market'
+  })
+  @ApiResponse({ status: 200, description: 'Feasibility analyzed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input or analysis failed' })
+  checkFeasibility(@Body() dto: FeasibilityCheckDto) {
+    return this.generationService.checkFeasibility(dto);
   }
 
   @Post('enrich')

@@ -53,3 +53,56 @@ export class EnrichInitiativeDto {
   @IsNotEmpty()
   initiativeId: string;
 }
+
+export class FeasibilityCheckDto {
+  @ApiProperty({ description: 'Initiative ID' })
+  @IsString()
+  @IsNotEmpty()
+  initiativeId: string;
+
+  @ApiProperty({ description: 'Initiative name' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({ description: 'Initiative description' })
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @ApiPropertyOptional({ description: 'Criterion scores', type: [Object] })
+  @IsArray()
+  @IsOptional()
+  scores?: Array<{
+    criterion: string;
+    score: number;
+    weight: number;
+    weighted: number;
+  }>;
+}
+
+export class GenerateFullBriefDto {
+  @ApiProperty({ description: 'Initiative ID' })
+  @IsString()
+  @IsNotEmpty()
+  initiativeId: string;
+
+  @ApiProperty({ description: 'Initiative name' })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({ description: 'Initiative description' })
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @ApiProperty({ description: 'Weighted score' })
+  @IsNumber()
+  weightedScore: number;
+
+  @ApiPropertyOptional({ description: 'Criterion breakdown', type: [Object] })
+  @IsArray()
+  @IsOptional()
+  criterionBreakdown?: any[];
+}

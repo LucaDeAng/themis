@@ -79,6 +79,7 @@ model Project {
   businessContext String?  @map("business_context")
   strategicGoals  String[] @map("strategic_goals")
   createdBy       String   @map("created_by")
+  status          ProjectStatus @default(DRAFT)
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
@@ -91,6 +92,13 @@ model Project {
   activityLogs ActivityLog[]
 
   @@map("projects")
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
 }
 
 model Criterion {
@@ -259,6 +267,8 @@ model Brief {
   rationale        String?
   risks            String?
   metrics          String?
+  implementation   String?
+  timeline         String?
   imagePrompt      String?  @map("image_prompt")
   imageUrl         String?  @map("image_url")
   sections         Json?    @default("{}")

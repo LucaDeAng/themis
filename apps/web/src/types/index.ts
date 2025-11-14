@@ -100,6 +100,8 @@ export interface Brief {
   rationale: string | null;
   risks: string | null;
   metrics: string | null;
+  implementation: string | null;
+  timeline: string | null;
   imagePrompt: string | null;
   imageUrl: string | null;
   sections: Record<string, any>;
