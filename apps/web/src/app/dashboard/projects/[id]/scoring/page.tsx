@@ -89,7 +89,7 @@ export default function ScoringPage() {
         <ProjectTabs />
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring</h1>
+            <h1 className="text-3xl font-bold text-gradient">{project.title} - Scoring</h1>
             <p className="text-muted-foreground mt-2">Score initiatives against criteria</p>
           </div>
 
@@ -114,7 +114,7 @@ export default function ScoringPage() {
         <ProjectTabs />
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gradient">{project.name} - Scoring</h1>
+            <h1 className="text-3xl font-bold text-gradient">{project.title} - Scoring</h1>
             <p className="text-muted-foreground mt-2">Score initiatives against criteria</p>
           </div>
 
