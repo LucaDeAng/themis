@@ -1,8 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowUp, ArrowDown, Award, TrendingUp, Target, AlertCircle, FileText } from 'lucide-react'
+import { ArrowUp, ArrowDown, Award, TrendingUp, Target, AlertCircle, FileText, Lightbulb } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -14,11 +14,16 @@ import { useInitiatives } from '@/hooks/use-initiatives'
 import { useScores } from '@/hooks/use-scores'
 import type { Criterion, Initiative, Score } from '@/types'
 import { ProjectTabs } from '@/components/project-tabs'
+import { FeasibilityCheckDialog } from '@/components/feasibility-check-dialog'
+import { GenerateBriefDialog } from '@/components/generate-brief-dialog'
 
 export default function RankingPage() {
   const params = useParams()
   const router = useRouter()
   const projectId = params.id as string
+
+  const [selectedForFeasibility, setSelectedForFeasibility] = useState<any>(null)
+  const [selectedForBrief, setSelectedForBrief] = useState<any>(null)
 
   const { data: project } = useProject(projectId)
   const { data: criteria = [] } = useCriteria(projectId)
@@ -346,6 +351,28 @@ export default function RankingPage() {
                           ))}
                         </div>
                       </div>
+
+                      {/* AI Actions */}
+                      <div className="mt-4 flex gap-2 border-t pt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedForFeasibility(initiative)}
+                          className="flex-1"
+                        >
+                          <Lightbulb className="h-3.5 w-3.5 mr-1.5" />
+                          Feasibility Check
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedForBrief(initiative)}
+                          className="flex-1"
+                        >
+                          <FileText className="h-3.5 w-3.5 mr-1.5" />
+                          Generate Brief
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -354,6 +381,22 @@ export default function RankingPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* AI Dialogs */}
+      {selectedForFeasibility && (
+        <FeasibilityCheckDialog
+          initiative={selectedForFeasibility}
+          open={!!selectedForFeasibility}
+          onOpenChange={(open) => !open && setSelectedForFeasibility(null)}
+        />
+      )}
+      {selectedForBrief && (
+        <GenerateBriefDialog
+          initiative={selectedForBrief}
+          open={!!selectedForBrief}
+          onOpenChange={(open) => !open && setSelectedForBrief(null)}
+        />
+      )}
       </div>
     </div>
   )
