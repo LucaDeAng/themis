@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { Save, AlertCircle, TrendingUp, CheckCircle2 } from 'lucide-react'
+import { Save, AlertCircle, TrendingUp, CheckCircle2, Download } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
+import { exportScoringToCSV } from '@/lib/export'
 import { useProject } from '@/hooks/use-projects'
 import { useCriteria } from '@/hooks/use-criteria'
 import { useInitiatives } from '@/hooks/use-initiatives'
@@ -140,12 +141,21 @@ export default function ScoringPage() {
             Rate each initiative on a scale of 1-5 for each criterion
           </p>
         </div>
-        {hasUnsaved && (
-          <Alert className="w-auto">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>Scores auto-save on blur</AlertDescription>
-          </Alert>
-        )}
+        <div className="flex gap-2 items-center">
+          {hasUnsaved && (
+            <Alert className="w-auto p-2">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-xs">Scores auto-save on blur</AlertDescription>
+            </Alert>
+          )}
+          <Button
+            variant="outline"
+            onClick={() => exportScoringToCSV(initiatives, criteria, scores, project.name)}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </Button>
+        </div>
       </div>
 
       {/* Legend */}

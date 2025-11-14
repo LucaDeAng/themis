@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowUp, ArrowDown, Award, TrendingUp, Target, AlertCircle, FileText, Lightbulb } from 'lucide-react'
+import { ArrowUp, ArrowDown, Award, TrendingUp, Target, AlertCircle, FileText, Lightbulb, Download } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { exportRankingToCSV } from '@/lib/export'
 import { useProject } from '@/hooks/use-projects'
 import { useCriteria } from '@/hooks/use-criteria'
 import { useInitiatives } from '@/hooks/use-initiatives'
@@ -175,12 +176,21 @@ export default function RankingPage() {
             Initiatives ranked by weighted score and gate compliance
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={() => router.push(`/dashboard/projects/${projectId}/scoring`)}
-        >
-          Edit Scores
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => exportRankingToCSV(rankedInitiatives, project.name)}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/dashboard/projects/${projectId}/scoring`)}
+          >
+            Edit Scores
+          </Button>
+        </div>
       </div>
 
       {/* Summary Stats */}

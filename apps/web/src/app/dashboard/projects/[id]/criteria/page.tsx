@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
-import { Plus, BarChart3, AlertCircle } from 'lucide-react'
+import { Plus, BarChart3, AlertCircle, Download, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CriteriaList } from '@/components/criteria-list'
 import { AddCriterionDialog } from '@/components/add-criterion-dialog'
 import { WeightDistributionChart } from '@/components/weight-distribution-chart'
+import { TemplateSelectorDialog } from '@/components/template-selector-dialog'
+import { exportCriteriaToCSV } from '@/lib/export'
 import { useCriteria } from '@/hooks/use-criteria'
 import { useProject } from '@/hooks/use-projects'
 import type { Criterion } from '@/types'
@@ -18,9 +20,10 @@ export default function CriteriaPage() {
   const params = useParams()
   const projectId = params.id as string
   const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false)
 
   const { data: project, isLoading: projectLoading } = useProject(projectId)
-  const { data: criteria = [], isLoading: criteriaLoading } = useCriteria(projectId)
+  const { data: criteria = [], isLoading: criteriaLoading, refetch } = useCriteria(projectId)
 
   const totalWeight = criteria.reduce((sum: number, c: Criterion) => sum + (c.weight || 0), 0)
   const weightPercentage = Math.round(totalWeight * 100)
@@ -46,10 +49,27 @@ export default function CriteriaPage() {
             Define evaluation criteria with weights and thresholds
           </p>
         </div>
-        <Button onClick={() => setAddDialogOpen(true)} className="gradient-themis">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Criterion
-        </Button>
+        <div className="flex gap-2">
+          {criteria.length === 0 && (
+            <Button onClick={() => setIsTemplateDialogOpen(true)} variant="outline">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Use Template
+            </Button>
+          )}
+          {criteria.length > 0 && (
+            <Button
+              onClick={() => exportCriteriaToCSV(criteria, project?.name || 'Project')}
+              variant="outline"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          )}
+          <Button onClick={() => setAddDialogOpen(true)} className="gradient-themis">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Criterion
+          </Button>
+        </div>
       </div>
 
       {/* Weight Distribution Alert */}
@@ -145,6 +165,14 @@ export default function CriteriaPage() {
         projectId={projectId}
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
+      />
+
+      {/* Template Selector Dialog */}
+      <TemplateSelectorDialog
+        projectId={projectId}
+        open={isTemplateDialogOpen}
+        onOpenChange={setIsTemplateDialogOpen}
+        onTemplateApplied={() => refetch()}
       />
       </div>
     </div>
