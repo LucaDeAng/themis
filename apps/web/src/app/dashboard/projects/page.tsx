@@ -120,7 +120,7 @@ export default function ProjectsPage() {
               <Card className="glass-effect hover:glow-effect transition-all duration-300">
                 <CardHeader className="flex flex-row items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-xl">{project.title}</CardTitle>
+                    <CardTitle className="text-xl">{project.name}</CardTitle>
                     {project.description && (
                       <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
                         {project.description}
