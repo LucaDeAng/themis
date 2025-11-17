@@ -81,6 +81,7 @@ export class GateEvaluator {
     context: Record<string, unknown>,
   ): boolean {
     const [operator] = Object.keys(logic);
+    if (!operator) return true;
     const args = logic[operator];
 
     switch (operator) {

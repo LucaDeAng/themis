@@ -33,6 +33,7 @@ export class AnthropicProvider extends BaseLLMProvider {
     const userMessages = params.messages.filter((m) => m.role !== 'system');
 
     try {
+      // @ts-expect-error - Anthropic SDK v0.9.1 types incomplete
       const response = await this.client.messages.create({
         model: this.config.model,
         system: systemMessage?.content,
@@ -75,6 +76,7 @@ export class AnthropicProvider extends BaseLLMProvider {
 
   async healthCheck(): Promise<boolean> {
     try {
+      // @ts-expect-error - Anthropic SDK v0.9.1 types incomplete
       await this.client.messages.create({
         model: this.config.model,
         messages: [{ role: 'user', content: 'test' }],

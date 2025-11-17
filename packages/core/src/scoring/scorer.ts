@@ -7,7 +7,6 @@
 
 import type {
   ScoringConfig,
-  ScoringInput,
   InitiativeScore,
   CriterionScore,
 } from '@themis/types';
