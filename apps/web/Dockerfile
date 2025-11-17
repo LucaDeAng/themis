@@ -11,8 +11,8 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/types/package.json ./packages/types/
 COPY packages/core/package.json ./packages/core/
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies  
+RUN pnpm install
 
 # Copy source files
 COPY . .
