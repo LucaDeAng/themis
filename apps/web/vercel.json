@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd ../.. && pnpm install && pnpm --filter=web build",
+  "outputDirectory": ".next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://themis-production.up.railway.app/api"
+  }
+}

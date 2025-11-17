@@ -20,6 +20,7 @@ async function createApp() {
         'http://localhost:3000',
         'https://*.railway.app',
         'https://*.up.railway.app',
+        'https://*.vercel.app',
       ];
   
   app.enableCors({
