@@ -2,7 +2,7 @@ FROM node:20-alpine AS base
 
 WORKDIR /app
 
-# Install pnpm
+# Install pnpm - Updated Nov 17 2025
 RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 
 # Copy package files
