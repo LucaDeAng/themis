@@ -16,7 +16,11 @@ async function createApp() {
   // Enable CORS
   const corsOrigins = process.env.CORS_ORIGIN 
     ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
-    : ['http://localhost:3000'];
+    : [
+        'http://localhost:3000',
+        'https://*.railway.app',
+        'https://*.up.railway.app',
+      ];
   
   app.enableCors({
     origin: (origin, callback) => {
