@@ -5,7 +5,7 @@
  * Supports Llama 3, Mistral, and other locally-hosted models.
  */
 
-import type { LLMRequest, LLMResponse, EmbeddingRequest, Embedding } from '@themis/types';
+import type { LLMRequest, LLMResponse, EmbeddingRequest, Embedding, LLMConfig } from '@themis/types';
 import { BaseLLMProvider } from './base-provider';
 
 interface OllamaCompletionResponse {
@@ -28,7 +28,7 @@ interface OllamaEmbeddingResponse {
 export class OllamaProvider extends BaseLLMProvider {
   private baseUrl: string;
 
-  constructor(config: Parameters<typeof BaseLLMProvider.prototype.constructor>[0]) {
+  constructor(config: LLMConfig) {
     super(config);
     this.baseUrl = config.baseUrl ?? 'http://localhost:11434';
   }

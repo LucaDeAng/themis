@@ -5,13 +5,13 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import type { LLMRequest, LLMResponse, EmbeddingRequest, Embedding } from '@themis/types';
+import type { LLMRequest, LLMResponse, EmbeddingRequest, Embedding, LLMConfig } from '@themis/types';
 import { BaseLLMProvider } from './base-provider';
 
 export class AnthropicProvider extends BaseLLMProvider {
   private client: Anthropic;
 
-  constructor(config: Parameters<typeof BaseLLMProvider.prototype.constructor>[0]) {
+  constructor(config: LLMConfig) {
     super(config);
 
     if (!config.apiKey) {

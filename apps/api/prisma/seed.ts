@@ -42,16 +42,17 @@ async function main() {
     update: {},
     create: {
       id: projectId,
-      title: 'Digital Transformation 2025',
+      name: 'Digital Transformation 2025',
       description: 'Strategic digital transformation initiatives',
+      businessContext: 'Drive innovation and improve customer experience through digital channels',
+      strategicGoals: ['Digital Innovation', 'Customer Experience', 'Operational Efficiency'],
       workspaceId: workspace.id,
-      ownerId: user.id,
+      createdBy: user.id,
       status: 'ACTIVE',
-      intent: {},
     },
   });
 
-  console.log('✅ Created project:', project.title);
+  console.log('✅ Created project:', project.name);
 
   console.log('🎉 Seeding completed!');
 }

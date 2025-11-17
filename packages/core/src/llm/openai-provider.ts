@@ -6,13 +6,13 @@
  */
 
 import OpenAI from 'openai';
-import type { LLMRequest, LLMResponse, EmbeddingRequest, Embedding } from '@themis/types';
+import type { LLMRequest, LLMResponse, EmbeddingRequest, Embedding, LLMConfig } from '@themis/types';
 import { BaseLLMProvider } from './base-provider';
 
 export class OpenAIProvider extends BaseLLMProvider {
   private client: OpenAI;
 
-  constructor(config: Parameters<typeof BaseLLMProvider.prototype.constructor>[0]) {
+  constructor(config: LLMConfig) {
     super(config);
 
     if (!config.apiKey) {

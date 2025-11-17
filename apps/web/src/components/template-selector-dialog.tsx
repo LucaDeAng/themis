@@ -53,7 +53,7 @@ export function TemplateSelectorDialog({
     setIsApplying(true)
     try {
       const templateCriteria = CRITERION_TEMPLATES[selectedTemplate]
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
 
       // Create each criterion from template
       for (const criterion of templateCriteria) {

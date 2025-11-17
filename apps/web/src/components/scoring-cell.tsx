@@ -97,7 +97,7 @@ export function ScoringCell({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      e.currentTarget.blur()
+      (e.currentTarget as HTMLElement).blur()
     }
   }
 
