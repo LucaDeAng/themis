@@ -3,6 +3,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://api-guda93tid-lucadng-6149s-projects.vercel.app/api"
+    "NEXT_PUBLIC_API_URL": "https://api-4pynb5lmy-lucadng-6149s-projects.vercel.app/api"
   }
 }
