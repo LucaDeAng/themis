@@ -42,7 +42,7 @@ function validateApiUrl(url: string): { valid: boolean; error?: string } {
     }
 
     return { valid: true };
-  } catch (err) {
+  } catch {
     return { valid: false, error: 'API URL is not a valid URL' };
   }
 }
@@ -91,7 +91,7 @@ export async function runDiagnostics(apiUrl: string): Promise<ConfigDiagnostics>
     apiUrlValid: false,
     apiReachable: null,
     corsConfigured: false,
-    environment: process.env.NODE_ENV as any || 'development',
+    environment: (process.env.NODE_ENV as 'development' | 'production' | 'test') || 'development',
     timestamp: new Date().toISOString(),
     errors: [],
     warnings: [],
