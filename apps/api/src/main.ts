@@ -26,7 +26,9 @@ async function createApp() {
   app.enableCors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        return callback(null, true);
+      }
       
       // Check if origin matches any allowed pattern
       const isAllowed = corsOrigins.some(pattern => {
@@ -39,9 +41,19 @@ async function createApp() {
         return pattern === origin;
       });
       
-      callback(null, isAllowed);
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.warn(`⚠️  CORS blocked origin: ${origin}`);
+        console.warn(`   Allowed patterns: ${corsOrigins.join(', ')}`);
+        callback(new Error('Not allowed by CORS'));
+      }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    maxAge: 86400, // 24 hours
   });
 
   // Global validation pipe
@@ -82,9 +94,41 @@ async function createApp() {
 
 // For Vercel serverless
 export default async (req, res) => {
-  const app = await createApp();
-  const server = app.getHttpAdapter().getInstance();
-  return server(req, res);
+  try {
+    // Set CORS headers immediately before any processing
+    const origin = req.headers.origin || req.headers.referer;
+    if (origin) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+      res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+    }
+
+    // Handle OPTIONS preflight request
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
+    }
+
+    const app = await createApp();
+    const server = app.getHttpAdapter().getInstance();
+    return server(req, res);
+  } catch (error) {
+    console.error('❌ Vercel serverless error:', error);
+    
+    // Ensure CORS headers are set even on error
+    const origin = req.headers.origin || req.headers.referer;
+    if (origin) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+    }
+    
+    res.status(500).json({
+      statusCode: 500,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+    });
+  }
 };
 
 // For local development
