@@ -26,7 +26,9 @@ async function createApp() {
   app.enableCors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        return callback(null, true);
+      }
       
       // Check if origin matches any allowed pattern
       const isAllowed = corsOrigins.some(pattern => {
@@ -39,9 +41,19 @@ async function createApp() {
         return pattern === origin;
       });
       
-      callback(null, isAllowed);
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        console.warn(`⚠️  CORS blocked origin: ${origin}`);
+        console.warn(`   Allowed patterns: ${corsOrigins.join(', ')}`);
+        callback(new Error('Not allowed by CORS'));
+      }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    maxAge: 86400, // 24 hours
   });
 
   // Global validation pipe

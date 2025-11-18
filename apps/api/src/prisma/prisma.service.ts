@@ -6,7 +6,21 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   constructor() {
     // FORCE Supabase connection - Railway keeps injecting postgres.railway.internal
     const databaseUrl = process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL;
-    console.log('🔍 Using database URL:', databaseUrl?.includes('supabase') ? 'Supabase ✅' : 'Railway ❌');
+    
+    if (!databaseUrl) {
+      throw new Error('❌ No database URL configured. Set SUPABASE_DATABASE_URL or DATABASE_URL environment variable.');
+    }
+    
+    // Log which database source is being used
+    if (process.env.SUPABASE_DATABASE_URL) {
+      console.log('🔍 Using database URL: Supabase ✅ (SUPABASE_DATABASE_URL)');
+    } else if (databaseUrl.includes('supabase')) {
+      console.log('🔍 Using database URL: Supabase ✅ (DATABASE_URL)');
+    } else if (databaseUrl.includes('railway')) {
+      console.log('🔍 Using database URL: Railway 🚂 (DATABASE_URL)');
+    } else {
+      console.log('🔍 Using database URL: Custom database (DATABASE_URL)');
+    }
     
     super({
       datasources: {
