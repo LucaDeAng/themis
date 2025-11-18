@@ -13,7 +13,7 @@ export interface Workspace {
   id: string;
   name: string;
   slug: string;
-  settings: Record<string, any>;
+  settings: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,7 +25,7 @@ export interface Project {
   name: string; // Backend uses 'name' field
   title: string;
   description: string | null;
-  intent: Record<string, any> | null;
+  intent: Record<string, unknown> | null;
   status: 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';
   createdAt: Date;
   updatedAt: Date;
@@ -59,7 +59,7 @@ export interface Initiative {
   description: string | null;
   source: 'MANUAL' | 'CSV' | 'LLM_GENERATED' | 'ENRICHED';
   tags: string[];
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
   scores?: Score[];
@@ -104,15 +104,29 @@ export interface Brief {
   timeline: string | null;
   imagePrompt: string | null;
   imageUrl: string | null;
-  sections: Record<string, any>;
+  sections: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface CriterionBreakdownItem {
+  criterion: string;
+  score: number;
+  weight: number;
+  weighted: number;
+}
+
+export interface RankedInitiative extends Initiative {
+  weightedScore: number;
+  passesGates: boolean;
+  meetsMin: boolean;
+  criterionBreakdown: CriterionBreakdownItem[];
 }
 
 export interface RankList {
   id: string;
   projectId: string;
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
   createdAt: Date;
   rankedItems?: RankedItem[];
 }
@@ -123,7 +137,7 @@ export interface RankedItem {
   initiativeId: string;
   rank: number;
   score: number;
-  explanation: Record<string, any>;
+  explanation: Record<string, unknown>;
   initiative?: Initiative;
 }
 

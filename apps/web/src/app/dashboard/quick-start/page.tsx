@@ -89,7 +89,7 @@ export default function QuickStartPage() {
         
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Segui questa guida per creare il tuo primo progetto di prioritizzazione
-          e scoprire il potere dell'AI decisionale
+          e scoprire il potere dell&apos;AI decisionale
         </p>
 
         <div className="flex items-center justify-center gap-4 pt-4">

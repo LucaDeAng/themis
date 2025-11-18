@@ -1,8 +1,8 @@
-import type { Initiative, Criterion } from '@/types'
+import type { Criterion, Initiative, RankedInitiative, Score } from '@/types'
 
 // Export ranking to CSV
 export function exportRankingToCSV(
-  initiatives: any[],
+  initiatives: RankedInitiative[],
   projectName: string
 ) {
   const headers = [
@@ -47,7 +47,7 @@ export function exportRankingToCSV(
 export function exportScoringToCSV(
   initiatives: Initiative[],
   criteria: Criterion[],
-  scores: any[],
+  scores: Score[],
   projectName: string
 ) {
   const softCriteria = criteria.filter((c) => c.type === 'SOFT')

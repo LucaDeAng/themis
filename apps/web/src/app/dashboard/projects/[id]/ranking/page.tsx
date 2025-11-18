@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowUp, ArrowDown, Award, TrendingUp, Target, AlertCircle, FileText, Lightbulb, Download } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,7 +13,13 @@ import { useProject } from '@/hooks/use-projects'
 import { useCriteria } from '@/hooks/use-criteria'
 import { useInitiatives } from '@/hooks/use-initiatives'
 import { useScores } from '@/hooks/use-scores'
-import type { Criterion, Initiative, Score } from '@/types'
+import type {
+  Criterion,
+  CriterionBreakdownItem,
+  Initiative,
+  RankedInitiative,
+  Score,
+} from '@/types'
 import { ProjectTabs } from '@/components/project-tabs'
 import { FeasibilityCheckDialog } from '@/components/feasibility-check-dialog'
 import { GenerateBriefDialog } from '@/components/generate-brief-dialog'
@@ -23,8 +29,10 @@ export default function RankingPage() {
   const router = useRouter()
   const projectId = params.id as string
 
-  const [selectedForFeasibility, setSelectedForFeasibility] = useState<any>(null)
-  const [selectedForBrief, setSelectedForBrief] = useState<any>(null)
+  const [selectedForFeasibility, setSelectedForFeasibility] =
+    useState<RankedInitiative | null>(null)
+  const [selectedForBrief, setSelectedForBrief] =
+    useState<RankedInitiative | null>(null)
 
   const { data: project } = useProject(projectId)
   const { data: criteria = [] } = useCriteria(projectId)
@@ -43,60 +51,88 @@ export default function RankingPage() {
   )
 
   // Calculate weighted score for an initiative
-  const calculateWeightedScore = (initiativeId: string) => {
-    const initiativeScores = scores.filter((s: Score) => s.initiativeId === initiativeId)
-    let totalWeighted = 0
-    let totalWeight = 0
+  const calculateWeightedScore = useCallback(
+    (initiativeId: string) => {
+      const initiativeScores = scores.filter(
+        (s: Score) => s.initiativeId === initiativeId
+      )
+      let totalWeighted = 0
+      let totalWeight = 0
 
-    softCriteria.forEach((criterion: Criterion) => {
-      const score = initiativeScores.find((s: Score) => s.criterionId === criterion.id)
-      if (score && score.value) {
-        totalWeighted += score.value * (criterion.weight || 0)
-        totalWeight += criterion.weight || 0
-      }
-    })
+      softCriteria.forEach((criterion: Criterion) => {
+        const score = initiativeScores.find(
+          (s: Score) => s.criterionId === criterion.id
+        )
+        if (score && score.value) {
+          totalWeighted += score.value * (criterion.weight || 0)
+          totalWeight += criterion.weight || 0
+        }
+      })
 
-    return totalWeight > 0 ? totalWeighted / totalWeight : 0
-  }
+      return totalWeight > 0 ? totalWeighted / totalWeight : 0
+    },
+    [scores, softCriteria]
+  )
 
   // Check if passes all HARD gates
-  const passesHardGates = (initiativeId: string) => {
-    if (hardCriteria.length === 0) return true
+  const passesHardGates = useCallback(
+    (initiativeId: string) => {
+      if (hardCriteria.length === 0) return true
 
-    const initiativeScores = scores.filter((s: Score) => s.initiativeId === initiativeId)
-    return hardCriteria.every((criterion: Criterion) => {
-      const score = initiativeScores.find((s: Score) => s.criterionId === criterion.id)
-      return score && score.value >= 3
-    })
-  }
+      const initiativeScores = scores.filter(
+        (s: Score) => s.initiativeId === initiativeId
+      )
+      return hardCriteria.every((criterion: Criterion) => {
+        const score = initiativeScores.find(
+          (s: Score) => s.criterionId === criterion.id
+        )
+        return score && score.value >= 3
+      })
+    },
+    [hardCriteria, scores]
+  )
 
   // Check minimum thresholds
-  const meetsThresholds = (initiativeId: string) => {
-    const initiativeScores = scores.filter((s: Score) => s.initiativeId === initiativeId)
+  const meetsThresholds = useCallback(
+    (initiativeId: string) => {
+      const initiativeScores = scores.filter(
+        (s: Score) => s.initiativeId === initiativeId
+      )
 
-    return softCriteria.every((criterion: Criterion) => {
-      if (!criterion.minThreshold) return true
-      const score = initiativeScores.find((s: Score) => s.criterionId === criterion.id)
-      return score && score.value >= criterion.minThreshold
-    })
-  }
+      return softCriteria.every((criterion: Criterion) => {
+        if (!criterion.minThreshold) return true
+        const score = initiativeScores.find(
+          (s: Score) => s.criterionId === criterion.id
+        )
+        return score && score.value >= criterion.minThreshold
+      })
+    },
+    [scores, softCriteria]
+  )
 
   // Calculate scores per criterion for breakdown
-  const getCriterionScores = (initiativeId: string) => {
-    const initiativeScores = scores.filter((s: Score) => s.initiativeId === initiativeId)
-    return softCriteria.map((criterion: Criterion) => {
-      const score = initiativeScores.find((s: Score) => s.criterionId === criterion.id)
-      return {
-        criterion: criterion.name,
-        score: score?.value || 0,
-        weight: criterion.weight || 0,
-        weighted: (score?.value || 0) * (criterion.weight || 0),
-      }
-    })
-  }
+  const getCriterionScores = useCallback(
+    (initiativeId: string): CriterionBreakdownItem[] => {
+      const initiativeScores = scores.filter(
+        (s: Score) => s.initiativeId === initiativeId
+      )
+      return softCriteria.map((criterion: Criterion) => {
+        const score = initiativeScores.find(
+          (s: Score) => s.criterionId === criterion.id
+        )
+        return {
+          criterion: criterion.name,
+          score: score?.value || 0,
+          weight: criterion.weight || 0,
+          weighted: (score?.value || 0) * (criterion.weight || 0),
+        }
+      })
+    },
+    [scores, softCriteria]
+  )
 
   // Rank initiatives
-  const rankedInitiatives = useMemo(() => {
+  const rankedInitiatives = useMemo<RankedInitiative[]>(() => {
     return initiatives
       .map((init: Initiative) => ({
         ...init,
@@ -113,7 +149,13 @@ export default function RankingPage() {
         // Then by weighted score (descending)
         return b.weightedScore - a.weightedScore
       })
-  }, [initiatives, scores, criteria])
+  }, [
+    calculateWeightedScore,
+    getCriterionScores,
+    initiatives,
+    meetsThresholds,
+    passesHardGates,
+  ])
 
   // Get color for score
   const getScoreColor = (score: number) => {
@@ -340,7 +382,8 @@ export default function RankingPage() {
                       <div className="mt-4 space-y-2">
                         <div className="text-sm font-medium text-muted-foreground">Score Breakdown:</div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {initiative.criterionBreakdown.map((item: any) => (
+                          {initiative.criterionBreakdown.map(
+                            (item: CriterionBreakdownItem) => (
                             <div key={item.criterion} className="flex items-center gap-2">
                               <div className="flex-1 min-w-0">
                                 <div className="text-xs font-medium truncate">{item.criterion}</div>
@@ -349,7 +392,9 @@ export default function RankingPage() {
                                     value={(item.score / 5) * 100}
                                     className="h-1.5"
                                   />
-                                  <span className={`text-xs font-semibold ${getScoreColor(item.score)}`}>
+                                  <span
+                                    className={`text-xs font-semibold ${getScoreColor(item.score)}`}
+                                  >
                                     {item.score.toFixed(1)}
                                   </span>
                                 </div>

@@ -14,9 +14,10 @@ import { Loader2, FileText, Download, Copy, CheckCircle2 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import type { RankedInitiative } from '@/types'
 
 interface GenerateBriefDialogProps {
-  initiative: any
+  initiative: RankedInitiative
   open: boolean
   onOpenChange: (open: boolean) => void
 }
