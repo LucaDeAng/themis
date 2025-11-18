@@ -1,6 +1,10 @@
 # 🚀 Supabase Setup Guide for Themis
 
-## Step 1: Create Supabase Account & Project
+## Quick Setup (Automated)
+
+We've created a setup script to automate the database configuration. Follow these steps:
+
+### Step 1: Create Supabase Account & Project
 
 1. **Go to Supabase**: https://supabase.com
 2. **Sign up** or **Log in** with your GitHub account
@@ -13,11 +17,19 @@
 5. Click **"Create new project"**
 6. Wait 2-3 minutes for the project to be ready
 
-## Step 2: Enable pgvector Extension
+### Step 2: Run Setup Script
 
 1. In your Supabase project, go to **SQL Editor** (left sidebar)
 2. Click **"New query"**
-3. Paste this SQL and click **"Run"**:
+3. Copy the contents of `supabase-setup.sql` from the repository
+4. Paste into the SQL Editor and click **"Run"**
+5. The script will:
+   - ✅ Enable required extensions (pgvector, uuid-ossp)
+   - ✅ Verify extension setup
+   - ✅ Show connection information
+   - ✅ Provide monitoring queries
+
+**Or manually enable extensions:**
 
 ```sql
 -- Enable pgvector extension for semantic search
@@ -30,21 +42,35 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 SELECT * FROM pg_extension WHERE extname IN ('vector', 'uuid-ossp');
 ```
 
-4. You should see a success message confirming both extensions are enabled
+### Step 3: Get Your Connection String
 
-## Step 3: Get Your Connection String
+**IMPORTANT: Different connection strings for different deployments!**
 
-1. In Supabase, go to **Settings** (gear icon in sidebar)
-2. Click **"Database"**
-3. Scroll to **"Connection string"** section
-4. Select **"URI"** tab
-5. Copy the connection string (looks like this):
+#### For Railway / Traditional Servers:
+1. In Supabase, go to **Settings** (gear icon) → **Database**
+2. Scroll to **"Connection string"** section
+3. Select **"URI"** tab (Direct Connection)
+4. Copy the connection string (port **5432**):
    ```
-   postgresql://postgres:[YOUR-PASSWORD]@db.xxxxxxxxxxxxx.supabase.co:5432/postgres
+   postgresql://postgres.[project-id]:[PASSWORD]@db.xxxxx.supabase.co:5432/postgres
    ```
-6. **Important**: Replace `[YOUR-PASSWORD]` with your actual database password
 
-## Step 4: Update Your .env File
+#### For Vercel / Serverless:
+1. In Supabase, go to **Settings** → **Database**
+2. Scroll to **"Connection string"** section
+3. Select **"Connection pooling"** tab
+4. Choose **"Session mode"** (recommended)
+5. Copy the **pooled** connection string (port **6543**):
+   ```
+   postgresql://postgres.[project-id]:[PASSWORD]@aws-0-[region].pooler.supabase.com:6543/postgres
+   ```
+
+**Why pooled connection for serverless?**
+- Serverless functions (Vercel) create many short-lived connections
+- Direct connections (port 5432) will hit Supabase's connection limit quickly
+- Pooled connections (port 6543) use PgBouncer to manage connections efficiently
+
+### Step 4: Update Your .env File
 
 Your `.env` file has been created with your OpenAI API key already configured.
 
