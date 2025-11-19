@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: themis-api
+    runtime: node
+    region: frankfurt
+    plan: free
+    branch: main
+    rootDir: apps/api
+    buildCommand: pnpm install && pnpm prisma generate && pnpm build
+    startCommand: npx prisma migrate deploy && node dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
