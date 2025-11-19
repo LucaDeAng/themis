@@ -1,1 +1,1 @@
-web: cd apps/api && pnpm start
+web: npx prisma migrate deploy && node dist/main.js
