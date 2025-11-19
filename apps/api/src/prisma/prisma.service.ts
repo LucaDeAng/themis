@@ -51,6 +51,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   }
 
   async onModuleInit() {
+    // Skip auto-connect in serverless environments - connect on-demand instead
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      console.log('⚡ Serverless environment detected - skipping auto-connect');
+      return;
+    }
+    
     try {
       await this.$connect();
       console.log('✅ Database connected');
