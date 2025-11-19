@@ -1,20 +1,16 @@
 {
-  "providers": ["..."],
   "phases": {
     "setup": {
-      "nixPkgs": ["nodejs_24", "pnpm"]
+      "nixPkgs": ["nodejs_20"]
     },
     "install": {
-      "cmds": ["pnpm install"]
+      "cmds": ["npm install --legacy-peer-deps"]
     },
     "build": {
-      "cmds": ["pnpm run build"]
-    },
-    "deploy": {
-      "cmds": ["npx prisma migrate deploy"]
+      "cmds": ["npx prisma generate", "npm run build"]
     },
     "start": {
-      "cmd": "node dist/main.js"
+      "cmd": "npx prisma migrate deploy && node dist/main.js"
     }
   }
 }
