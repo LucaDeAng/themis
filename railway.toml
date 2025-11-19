@@ -1,13 +1,13 @@
 [[services]]
 name = "Themis"
 source = "."
-watch = ["apps/web/**"]
+watch = ["apps/api/**"]
 
 [services.build]
 builder = "NIXPACKS"
-buildCommand = "cd apps/web && pnpm install && pnpm build"
+buildCommand = "pnpm install --frozen-lockfile && cd apps/api && pnpm prisma generate && pnpm build"
 
 [services.deploy]
-startCommand = "cd apps/web && pnpm start"
+startCommand = "cd apps/api && npx prisma migrate deploy && node dist/main.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
