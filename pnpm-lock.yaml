@@ -63,9 +63,6 @@ importers:
       '@prisma/client':
         specifier: ^6.19.0
         version: 6.19.0(prisma@6.19.0(typescript@5.9.3))(typescript@5.9.3)
-      '@themis/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -75,6 +72,9 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      prisma:
+        specifier: ^6.19.0
+        version: 6.19.0(typescript@5.9.3)
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -115,9 +115,6 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.24)(ts-node@10.9.2(@types/node@20.19.24)(typescript@5.9.3))
-      prisma:
-        specifier: ^6.19.0
-        version: 6.19.0(typescript@5.9.3)
       supertest:
         specifier: ^6.3.3
         version: 6.3.4
