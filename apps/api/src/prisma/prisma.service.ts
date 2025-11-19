@@ -46,6 +46,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   }
 
   async onModuleInit() {
+    // Skip connection in serverless - Prisma connects automatically on first query
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+      console.log('⚡ Serverless: Skipping onModuleInit connection');
+      return;
+    }
+    
     try {
       await this.$connect();
       console.log('✅ Database connected');
