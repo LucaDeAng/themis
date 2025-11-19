@@ -7,7 +7,7 @@ export const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: 30000,
-  withCredentials: true, // Enable sending cookies/credentials for CORS
+  // withCredentials removed - not needed without cookie-based auth
 });
 
 // Request interceptor

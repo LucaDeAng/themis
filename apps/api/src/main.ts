@@ -49,7 +49,7 @@ async function createApp() {
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,
+    credentials: false, // Changed to false - no cookie-based auth
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     exposedHeaders: ['Content-Range', 'X-Content-Range'],
@@ -99,7 +99,6 @@ export default async (req, res) => {
     const origin = req.headers.origin || req.headers.referer;
     if (origin) {
       res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
       res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
     }
@@ -120,7 +119,6 @@ export default async (req, res) => {
     const origin = req.headers.origin || req.headers.referer;
     if (origin) {
       res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
     
     res.status(500).json({
