@@ -24,7 +24,7 @@
     "seed": "tsx infra/scripts/seed.ts",
     "db:up": "docker compose -f infra/docker-compose.yml up -d db",
     "db:down": "docker compose -f infra/docker-compose.yml down",
-    "prepare": "husky install"
+    "prepare": "node -e \"try { require('husky').install() } catch (e) {}\""
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
