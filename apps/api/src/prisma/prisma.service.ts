@@ -4,11 +4,11 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    // FORCE Supabase connection - Railway keeps injecting postgres.railway.internal
-    const databaseUrl = process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL;
+    // Use DATABASE_URL (Railway/standard) or fallback to SUPABASE_DATABASE_URL
+    const databaseUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
     
     if (!databaseUrl) {
-      throw new Error('❌ No database URL configured. Set SUPABASE_DATABASE_URL or DATABASE_URL environment variable.');
+      throw new Error('❌ No database URL configured. Set DATABASE_URL environment variable.');
     }
     
     // Detect if we're in serverless environment (Vercel)
@@ -18,12 +18,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const isPooled = databaseUrl.includes('pooler.supabase.com') || databaseUrl.includes(':6543');
     
     // Log which database source is being used
-    if (process.env.SUPABASE_DATABASE_URL) {
+    if (databaseUrl.includes('railway')) {
+      console.log('🔍 Using database URL: Railway 🚂 (DATABASE_URL)');
+    } else if (process.env.SUPABASE_DATABASE_URL) {
       console.log('🔍 Using database URL: Supabase ✅ (SUPABASE_DATABASE_URL)');
     } else if (databaseUrl.includes('supabase')) {
       console.log('🔍 Using database URL: Supabase ✅ (DATABASE_URL)');
-    } else if (databaseUrl.includes('railway')) {
-      console.log('🔍 Using database URL: Railway 🚂 (DATABASE_URL)');
     } else {
       console.log('🔍 Using database URL: Custom database (DATABASE_URL)');
     }
