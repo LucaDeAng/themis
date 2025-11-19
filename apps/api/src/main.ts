@@ -94,37 +94,33 @@ async function createApp() {
 
 // For Vercel serverless
 export default async (req, res) => {
+  // Set CORS headers immediately
+  const origin = req.headers.origin || req.headers.referer;
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+
+  // Handle OPTIONS preflight request
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   try {
-    // Set CORS headers immediately before any processing
-    const origin = req.headers.origin || req.headers.referer;
-    if (origin) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-      res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
-    }
-
-    // Handle OPTIONS preflight request
-    if (req.method === 'OPTIONS') {
-      res.status(200).end();
-      return;
-    }
-
     const app = await createApp();
     const server = app.getHttpAdapter().getInstance();
     return server(req, res);
   } catch (error) {
     console.error('❌ Vercel serverless error:', error);
-    
-    // Ensure CORS headers are set even on error
-    const origin = req.headers.origin || req.headers.referer;
-    if (origin) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    console.error('Error stack:', error.stack);
     
     res.status(500).json({
       statusCode: 500,
       message: 'Internal server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+      error: error.message || 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined,
     });
   }
 };
