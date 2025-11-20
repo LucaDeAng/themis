@@ -1,28 +1,28 @@
 FROM node:20-alpine
 
+# Install pnpm
+RUN npm install -g pnpm@9.1.0
+
 WORKDIR /app
 
-# Copia i file di configurazione
-COPY package*.json ./
+# Copy root package files for workspace context
+COPY ../../package.json ../../pnpm-lock.yaml ../../pnpm-workspace.yaml ./
 
-# Installa dipendenze (incluse dev per il build)
-RUN npm install --production=false && \
-    npm install -g tsx
+# Copy API package files
+COPY package.json ./apps/api/
 
-# Copia il codice sorgente (include schema.prisma aggiornato)
-COPY . .
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
-# Genera Prisma client DOPO aver copiato lo schema aggiornato
-RUN npx prisma generate
+# Copy source code
+COPY . ./apps/api/
 
-# Build dell'applicazione
-RUN npm run build
+# Generate Prisma client and build
+WORKDIR /app/apps/api
+RUN pnpm prisma generate && pnpm build
 
-# Rimuovi devDependencies per ridurre dimensione
-RUN npm prune --production
+# Expose port
+EXPOSE 10000
 
-# Espone la porta
-EXPOSE 4000
-
-# Avvia il server
+# Start server
 CMD ["node", "dist/main.js"]
