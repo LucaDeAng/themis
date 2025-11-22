@@ -13,9 +13,10 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Loader2, CheckCircle2, AlertTriangle, XCircle, Lightbulb } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import type { RankedInitiative } from '@/types'
 
 interface FeasibilityCheckDialogProps {
-  initiative: any
+  initiative: RankedInitiative
   open: boolean
   onOpenChange: (open: boolean) => void
 }

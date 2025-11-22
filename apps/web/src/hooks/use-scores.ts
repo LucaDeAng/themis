@@ -122,7 +122,7 @@ export function useAggregateScores(projectId: string) {
     queryFn: async () => {
       // This would typically be a backend endpoint
       // For now, we calculate on the frontend
-      const grouped = scores.reduce((acc: any, score: Score) => {
+      const grouped = scores.reduce<Record<string, Score[]>>((acc, score: Score) => {
         if (!acc[score.initiativeId]) {
           acc[score.initiativeId] = []
         }

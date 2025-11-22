@@ -186,7 +186,7 @@ export default function SettingsPage() {
                 <div className="space-y-0.5">
                   <Label>Tema Scuro</Label>
                   <p className="text-sm text-muted-foreground">
-                    Usa tema scuro per ridurre l'affaticamento visivo
+                    Usa tema scuro per ridurre l&apos;affaticamento visivo
                   </p>
                 </div>
                 <Switch defaultChecked />
@@ -215,7 +215,7 @@ export default function SettingsPage() {
               <div className="space-y-2">
                 <Label>Tutorial e Guide</Label>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Ripristina i tutorial per rivederli dall'inizio
+                  Ripristina i tutorial per rivederli dall&apos;inizio
                 </p>
                 <Button variant="outline" onClick={handleResetTutorial}>
                   <Sparkles className="w-4 h-4 mr-2" />
@@ -256,7 +256,7 @@ export default function SettingsPage() {
                 <div className="space-y-0.5">
                   <Label>Auto-generazione Suggerimenti</Label>
                   <p className="text-sm text-muted-foreground">
-                    L'AI suggerisce automaticamente iniziative
+                    L&apos;AI suggerisce automaticamente iniziative
                   </p>
                 </div>
                 <Switch defaultChecked />
@@ -276,7 +276,7 @@ export default function SettingsPage() {
                 <div className="space-y-0.5">
                   <Label>Generazione Brief Automatica</Label>
                   <p className="text-sm text-muted-foreground">
-                    Genera brief quando un'iniziativa è classificata
+                    Genera brief quando un&apos;iniziativa è classificata
                   </p>
                 </div>
                 <Switch />
@@ -349,14 +349,14 @@ export default function SettingsPage() {
               Privacy & GDPR
             </h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Analytics Anonimi</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Aiutaci a migliorare Themis condividendo dati anonimi d'uso
-                  </p>
-                </div>
-                <Switch defaultChecked />
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label>Analytics Anonimi</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Aiutaci a migliorare Themis condividendo dati anonimi d&apos;uso
+                    </p>
+                  </div>
+                  <Switch defaultChecked />
               </div>
               <Separator />
               <div className="space-y-2">

@@ -33,6 +33,15 @@ interface EditCriterionDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
+interface CriterionFormData {
+  name: string
+  description: string
+  category: string
+  weight: number
+  type: 'HARD' | 'SOFT'
+  minThreshold: number | null
+}
+
 const categories = [
   'Strategic',
   'Financial',
@@ -54,7 +63,7 @@ export function EditCriterionDialog({
     setValue,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<CriterionFormData>({
     defaultValues: {
       name: criterion.name,
       description: criterion.description || '',
@@ -80,7 +89,7 @@ export function EditCriterionDialog({
     })
   }, [criterion, reset])
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: CriterionFormData) => {
     try {
       await updateCriterion.mutateAsync({
         id: criterion.id,

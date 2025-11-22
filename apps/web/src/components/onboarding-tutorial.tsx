@@ -67,19 +67,19 @@ const tutorialSteps: TutorialStep[] = [
 export function OnboardingTutorial() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [hasSeenTutorial, setHasSeenTutorial] = useState(false);
+  const [hasSeenTutorial, setHasSeenTutorial] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('themis_tutorial_completed') === 'true';
+  });
 
   useEffect(() => {
-    // Check if user has seen tutorial
-    const seen = localStorage.getItem('themis_tutorial_completed');
-    setHasSeenTutorial(seen === 'true');
-    
     // Auto-open tutorial after 1 second if not seen
-    if (!seen) {
+    if (!hasSeenTutorial) {
       const timer = setTimeout(() => setIsOpen(true), 1000);
       return () => clearTimeout(timer);
     }
-  }, []);
+    return undefined;
+  }, [hasSeenTutorial]);
 
   const handleNext = () => {
     if (currentStep < tutorialSteps.length - 1) {
